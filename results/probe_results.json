@@ -1,0 +1,131 @@
+{
+  "gender": {
+    "n_classes": 2,
+    "probes": {
+      "LogReg": {
+        "balanced_accuracy": 0.8551393942939536,
+        "macro_f1": 0.8551748668100743,
+        "auroc": 0.9309091904668307,
+        "cv_mean": 0.8551146534210681,
+        "cv_std": 0.0074091233842212565
+      },
+      "LinearSVM": {
+        "balanced_accuracy": 0.8570520460299211,
+        "macro_f1": 0.8570806041925311,
+        "auroc": null,
+        "cv_mean": 0.8549015066482715,
+        "cv_std": 0.007684666714156223
+      },
+      "MLP": {
+        "balanced_accuracy": 0.8689923187150034,
+        "macro_f1": 0.8692514958302393,
+        "auroc": 0.9429898330792882,
+        "cv_mean": 0.8671734067941863,
+        "cv_std": 0.004343684982807531
+      }
+    },
+    "baselines": {
+      "Stratified": {
+        "balanced_accuracy": 0.49839296944644307,
+        "macro_f1": 0.49839257154711863,
+        "auroc": 0.49839296944644307
+      },
+      "Majority": {
+        "balanced_accuracy": 0.5,
+        "macro_f1": 0.3437153931339978,
+        "auroc": 0.5
+      }
+    },
+    "null_control": {
+      "balanced_accuracy": 0.4946993854044527,
+      "macro_f1": 0.47480318324071574,
+      "auroc": 0.48948447315973603
+    }
+  },
+  "race": {
+    "n_classes": 5,
+    "probes": {
+      "LogReg": {
+        "balanced_accuracy": 0.5966249052499499,
+        "macro_f1": 0.5966133185082306,
+        "auroc": 0.8829012142219785,
+        "cv_mean": 0.5873961548758874,
+        "cv_std": 0.00836186060104963
+      },
+      "LinearSVM": {
+        "balanced_accuracy": 0.5792041362719548,
+        "macro_f1": 0.5689497050390704,
+        "auroc": null,
+        "cv_mean": 0.5710422695577119,
+        "cv_std": 0.00845502070645164
+      },
+      "MLP": {
+        "balanced_accuracy": 0.6189655256469645,
+        "macro_f1": 0.6201002269075644,
+        "auroc": 0.8913319250000116,
+        "cv_mean": 0.6130254893104128,
+        "cv_std": 0.012066917097703711
+      }
+    },
+    "baselines": {
+      "Stratified": {
+        "balanced_accuracy": 0.21169572319381885,
+        "macro_f1": 0.21143108264056476,
+        "auroc": 0.5076718409926091
+      },
+      "Majority": {
+        "balanced_accuracy": 0.2,
+        "macro_f1": 0.1193429036554684,
+        "auroc": 0.5
+      }
+    },
+    "null_control": {
+      "balanced_accuracy": 0.2003959422297012,
+      "macro_f1": 0.12068790507703082,
+      "auroc": 0.5115230812119583
+    }
+  },
+  "age_bucket": {
+    "n_classes": 4,
+    "probes": {
+      "LogReg": {
+        "balanced_accuracy": 0.5993670635535028,
+        "macro_f1": 0.6003468384449842,
+        "auroc": 0.8402549857206227,
+        "cv_mean": 0.5972597120204166,
+        "cv_std": 0.007074739249434112
+      },
+      "LinearSVM": {
+        "balanced_accuracy": 0.5806672157371822,
+        "macro_f1": 0.5652755636906326,
+        "auroc": null,
+        "cv_mean": 0.5858317017322003,
+        "cv_std": 0.0064673038018430605
+      },
+      "MLP": {
+        "balanced_accuracy": 0.6016357334249663,
+        "macro_f1": 0.5965970087137147,
+        "auroc": 0.8479324878032758,
+        "cv_mean": 0.6092804866874239,
+        "cv_std": 0.007162641025719341
+      }
+    },
+    "baselines": {
+      "Stratified": {
+        "balanced_accuracy": 0.24475268866895483,
+        "macro_f1": 0.24455705237898565,
+        "auroc": 0.4968602087101617
+      },
+      "Majority": {
+        "balanced_accuracy": 0.25,
+        "macro_f1": 0.14619402985074628,
+        "auroc": 0.5
+      }
+    },
+    "null_control": {
+      "balanced_accuracy": 0.2510300847545253,
+      "macro_f1": 0.15094702621255204,
+      "auroc": 0.5078403641962528
+    }
+  }
+}
