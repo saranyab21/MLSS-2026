@@ -1,0 +1,1039 @@
+{
+  "args": {
+    "latents": "../../latents/utkface_latents.npz",
+    "output": "../../results/federated_results.json",
+    "n_clients": 10,
+    "rounds": 50,
+    "local_epochs": 2,
+    "batch_size": 64,
+    "lr": 0.001,
+    "imr_threshold": 1.8,
+    "eval_every": 10,
+    "seed": 42
+  },
+  "results": {
+    "none": {
+      "final": {
+        "overall_acc": 0.642691415313225,
+        "balanced_acc": 0.6097460794760096,
+        "groups": {
+          "White/Male": {
+            "acc": 0.6102470265324794,
+            "n": 1093
+          },
+          "White/Female": {
+            "acc": 0.6013001083423619,
+            "n": 923
+          },
+          "Black/Male": {
+            "acc": 0.5858369098712446,
+            "n": 466
+          },
+          "Black/Female": {
+            "acc": 0.5968109339407744,
+            "n": 439
+          },
+          "Asian/Male": {
+            "acc": 0.7236024844720497,
+            "n": 322
+          },
+          "Asian/Female": {
+            "acc": 0.810958904109589,
+            "n": 365
+          },
+          "Indian/Male": {
+            "acc": 0.6252771618625277,
+            "n": 451
+          },
+          "Indian/Female": {
+            "acc": 0.7325581395348837,
+            "n": 344
+          },
+          "Other/Male": {
+            "acc": 0.5894039735099338,
+            "n": 151
+          },
+          "Other/Female": {
+            "acc": 0.7379679144385026,
+            "n": 187
+          }
+        },
+        "worst_group": 0.5858369098712446,
+        "best_group": 0.810958904109589,
+        "gap": 0.22512199423834445,
+        "std_across_groups": 0.0773056143272758
+      },
+      "history": [
+        {
+          "round": 10,
+          "overall_acc": 0.6502847500527315,
+          "balanced_acc": 0.6060567350767898,
+          "worst_group": 0.5827814569536424,
+          "best_group": 0.7835616438356164,
+          "gap": 0.20078018688197408,
+          "std_across_groups": 0.06982770283546168
+        },
+        {
+          "round": 20,
+          "overall_acc": 0.6582999367222105,
+          "balanced_acc": 0.6134381105429327,
+          "worst_group": 0.609271523178808,
+          "best_group": 0.8,
+          "gap": 0.1907284768211921,
+          "std_across_groups": 0.06756017478310675
+        },
+        {
+          "round": 30,
+          "overall_acc": 0.6555578991773887,
+          "balanced_acc": 0.6193754918592795,
+          "worst_group": 0.5960264900662252,
+          "best_group": 0.8027397260273973,
+          "gap": 0.20671323596117208,
+          "std_across_groups": 0.06967955652437301
+        },
+        {
+          "round": 40,
+          "overall_acc": 0.6515503058426493,
+          "balanced_acc": 0.6177324164273714,
+          "worst_group": 0.5960264900662252,
+          "best_group": 0.8191780821917808,
+          "gap": 0.22315159212555558,
+          "std_across_groups": 0.07564393524182597
+        },
+        {
+          "round": 50,
+          "overall_acc": 0.642691415313225,
+          "balanced_acc": 0.6097460794760096,
+          "worst_group": 0.5858369098712446,
+          "best_group": 0.810958904109589,
+          "gap": 0.22512199423834445,
+          "std_across_groups": 0.0773056143272758
+        }
+      ],
+      "clients": [
+        {
+          "client": 0,
+          "n_before": 1897,
+          "n_after": 1897,
+          "imbalance_ratio": 2.175141242937853,
+          "resampled": false,
+          "race_dist": [
+            812,
+            370,
+            260,
+            331,
+            124
+          ],
+          "gender_dist": [
+            984,
+            913
+          ],
+          "age_dist": [
+            376,
+            770,
+            354,
+            397
+          ]
+        },
+        {
+          "client": 1,
+          "n_before": 1897,
+          "n_after": 1897,
+          "imbalance_ratio": 2.163793103448276,
+          "resampled": false,
+          "race_dist": [
+            810,
+            346,
+            288,
+            327,
+            126
+          ],
+          "gender_dist": [
+            993,
+            904
+          ],
+          "age_dist": [
+            382,
+            753,
+            348,
+            414
+          ]
+        },
+        {
+          "client": 2,
+          "n_before": 1897,
+          "n_after": 1897,
+          "imbalance_ratio": 2.259154929577465,
+          "resampled": false,
+          "race_dist": [
+            796,
+            358,
+            280,
+            335,
+            128
+          ],
+          "gender_dist": [
+            987,
+            910
+          ],
+          "age_dist": [
+            375,
+            802,
+            355,
+            365
+          ]
+        },
+        {
+          "client": 3,
+          "n_before": 1897,
+          "n_after": 1897,
+          "imbalance_ratio": 2.048780487804878,
+          "resampled": false,
+          "race_dist": [
+            822,
+            325,
+            279,
+            336,
+            135
+          ],
+          "gender_dist": [
+            999,
+            898
+          ],
+          "age_dist": [
+            369,
+            756,
+            373,
+            399
+          ]
+        },
+        {
+          "client": 4,
+          "n_before": 1896,
+          "n_after": 1896,
+          "imbalance_ratio": 1.9946380697050938,
+          "resampled": false,
+          "race_dist": [
+            794,
+            371,
+            276,
+            295,
+            160
+          ],
+          "gender_dist": [
+            971,
+            925
+          ],
+          "age_dist": [
+            374,
+            744,
+            373,
+            405
+          ]
+        },
+        {
+          "client": 5,
+          "n_before": 1896,
+          "n_after": 1896,
+          "imbalance_ratio": 2.183844011142061,
+          "resampled": false,
+          "race_dist": [
+            796,
+            361,
+            297,
+            313,
+            129
+          ],
+          "gender_dist": [
+            979,
+            917
+          ],
+          "age_dist": [
+            377,
+            784,
+            359,
+            376
+          ]
+        },
+        {
+          "client": 6,
+          "n_before": 1896,
+          "n_after": 1896,
+          "imbalance_ratio": 1.8811369509043927,
+          "resampled": false,
+          "race_dist": [
+            794,
+            379,
+            276,
+            326,
+            121
+          ],
+          "gender_dist": [
+            989,
+            907
+          ],
+          "age_dist": [
+            388,
+            728,
+            387,
+            393
+          ]
+        },
+        {
+          "client": 7,
+          "n_before": 1896,
+          "n_after": 1896,
+          "imbalance_ratio": 2.4682779456193353,
+          "resampled": false,
+          "race_dist": [
+            784,
+            386,
+            261,
+            313,
+            152
+          ],
+          "gender_dist": [
+            975,
+            921
+          ],
+          "age_dist": [
+            350,
+            817,
+            331,
+            398
+          ]
+        },
+        {
+          "client": 8,
+          "n_before": 1896,
+          "n_after": 1896,
+          "imbalance_ratio": 2.291176470588235,
+          "resampled": false,
+          "race_dist": [
+            819,
+            357,
+            265,
+            308,
+            147
+          ],
+          "gender_dist": [
+            1007,
+            889
+          ],
+          "age_dist": [
+            360,
+            779,
+            340,
+            417
+          ]
+        },
+        {
+          "client": 9,
+          "n_before": 1896,
+          "n_after": 1896,
+          "imbalance_ratio": 2.0217983651226157,
+          "resampled": false,
+          "race_dist": [
+            835,
+            368,
+            265,
+            296,
+            132
+          ],
+          "gender_dist": [
+            1024,
+            872
+          ],
+          "age_dist": [
+            367,
+            742,
+            369,
+            418
+          ]
+        }
+      ]
+    },
+    "fedar": {
+      "final": {
+        "overall_acc": 0.6336215988188146,
+        "balanced_acc": 0.6089003075932529,
+        "groups": {
+          "White/Male": {
+            "acc": 0.6193961573650503,
+            "n": 1093
+          },
+          "White/Female": {
+            "acc": 0.5937161430119177,
+            "n": 923
+          },
+          "Black/Male": {
+            "acc": 0.5622317596566524,
+            "n": 466
+          },
+          "Black/Female": {
+            "acc": 0.5671981776765376,
+            "n": 439
+          },
+          "Asian/Male": {
+            "acc": 0.7142857142857143,
+            "n": 322
+          },
+          "Asian/Female": {
+            "acc": 0.7835616438356164,
+            "n": 365
+          },
+          "Indian/Male": {
+            "acc": 0.5920177383592018,
+            "n": 451
+          },
+          "Indian/Female": {
+            "acc": 0.7209302325581395,
+            "n": 344
+          },
+          "Other/Male": {
+            "acc": 0.6754966887417219,
+            "n": 151
+          },
+          "Other/Female": {
+            "acc": 0.7219251336898396,
+            "n": 187
+          }
+        },
+        "worst_group": 0.5622317596566524,
+        "best_group": 0.7835616438356164,
+        "gap": 0.22132988417896404,
+        "std_across_groups": 0.0738877082400454
+      },
+      "history": [
+        {
+          "round": 10,
+          "overall_acc": 0.6388947479434719,
+          "balanced_acc": 0.6201815717618205,
+          "worst_group": 0.5665236051502146,
+          "best_group": 0.7890410958904109,
+          "gap": 0.22251749074019633,
+          "std_across_groups": 0.07959394079980003
+        },
+        {
+          "round": 20,
+          "overall_acc": 0.6344653026787598,
+          "balanced_acc": 0.615928881689516,
+          "worst_group": 0.5600858369098712,
+          "best_group": 0.7890410958904109,
+          "gap": 0.2289552589805397,
+          "std_across_groups": 0.07976713096796549
+        },
+        {
+          "round": 30,
+          "overall_acc": 0.6264501160092807,
+          "balanced_acc": 0.6114777772363076,
+          "worst_group": 0.5429184549356223,
+          "best_group": 0.7753424657534247,
+          "gap": 0.2324240108178024,
+          "std_across_groups": 0.07954433499662261
+        },
+        {
+          "round": 40,
+          "overall_acc": 0.6285593756591437,
+          "balanced_acc": 0.6096363870697692,
+          "worst_group": 0.5515021459227468,
+          "best_group": 0.7808219178082192,
+          "gap": 0.22931977188547237,
+          "std_across_groups": 0.07624850277439034
+        },
+        {
+          "round": 50,
+          "overall_acc": 0.6336215988188146,
+          "balanced_acc": 0.6089003075932529,
+          "worst_group": 0.5622317596566524,
+          "best_group": 0.7835616438356164,
+          "gap": 0.22132988417896404,
+          "std_across_groups": 0.0738877082400454
+        }
+      ],
+      "clients": [
+        {
+          "client": 0,
+          "n_before": 1897,
+          "n_after": 3080,
+          "imbalance_ratio": 2.175141242937853,
+          "resampled": true,
+          "race_dist": [
+            812,
+            370,
+            260,
+            331,
+            124
+          ],
+          "gender_dist": [
+            984,
+            913
+          ],
+          "age_dist": [
+            376,
+            770,
+            354,
+            397
+          ]
+        },
+        {
+          "client": 1,
+          "n_before": 1897,
+          "n_after": 3012,
+          "imbalance_ratio": 2.163793103448276,
+          "resampled": true,
+          "race_dist": [
+            810,
+            346,
+            288,
+            327,
+            126
+          ],
+          "gender_dist": [
+            993,
+            904
+          ],
+          "age_dist": [
+            382,
+            753,
+            348,
+            414
+          ]
+        },
+        {
+          "client": 2,
+          "n_before": 1897,
+          "n_after": 3208,
+          "imbalance_ratio": 2.259154929577465,
+          "resampled": true,
+          "race_dist": [
+            796,
+            358,
+            280,
+            335,
+            128
+          ],
+          "gender_dist": [
+            987,
+            910
+          ],
+          "age_dist": [
+            375,
+            802,
+            355,
+            365
+          ]
+        },
+        {
+          "client": 3,
+          "n_before": 1897,
+          "n_after": 3024,
+          "imbalance_ratio": 2.048780487804878,
+          "resampled": true,
+          "race_dist": [
+            822,
+            325,
+            279,
+            336,
+            135
+          ],
+          "gender_dist": [
+            999,
+            898
+          ],
+          "age_dist": [
+            369,
+            756,
+            373,
+            399
+          ]
+        },
+        {
+          "client": 4,
+          "n_before": 1896,
+          "n_after": 2976,
+          "imbalance_ratio": 1.9946380697050938,
+          "resampled": true,
+          "race_dist": [
+            794,
+            371,
+            276,
+            295,
+            160
+          ],
+          "gender_dist": [
+            971,
+            925
+          ],
+          "age_dist": [
+            374,
+            744,
+            373,
+            405
+          ]
+        },
+        {
+          "client": 5,
+          "n_before": 1896,
+          "n_after": 3136,
+          "imbalance_ratio": 2.183844011142061,
+          "resampled": true,
+          "race_dist": [
+            796,
+            361,
+            297,
+            313,
+            129
+          ],
+          "gender_dist": [
+            979,
+            917
+          ],
+          "age_dist": [
+            377,
+            784,
+            359,
+            376
+          ]
+        },
+        {
+          "client": 6,
+          "n_before": 1896,
+          "n_after": 2912,
+          "imbalance_ratio": 1.8811369509043927,
+          "resampled": true,
+          "race_dist": [
+            794,
+            379,
+            276,
+            326,
+            121
+          ],
+          "gender_dist": [
+            989,
+            907
+          ],
+          "age_dist": [
+            388,
+            728,
+            387,
+            393
+          ]
+        },
+        {
+          "client": 7,
+          "n_before": 1896,
+          "n_after": 3268,
+          "imbalance_ratio": 2.4682779456193353,
+          "resampled": true,
+          "race_dist": [
+            784,
+            386,
+            261,
+            313,
+            152
+          ],
+          "gender_dist": [
+            975,
+            921
+          ],
+          "age_dist": [
+            350,
+            817,
+            331,
+            398
+          ]
+        },
+        {
+          "client": 8,
+          "n_before": 1896,
+          "n_after": 3116,
+          "imbalance_ratio": 2.291176470588235,
+          "resampled": true,
+          "race_dist": [
+            819,
+            357,
+            265,
+            308,
+            147
+          ],
+          "gender_dist": [
+            1007,
+            889
+          ],
+          "age_dist": [
+            360,
+            779,
+            340,
+            417
+          ]
+        },
+        {
+          "client": 9,
+          "n_before": 1896,
+          "n_after": 2968,
+          "imbalance_ratio": 2.0217983651226157,
+          "resampled": true,
+          "race_dist": [
+            835,
+            368,
+            265,
+            296,
+            132
+          ],
+          "gender_dist": [
+            1024,
+            872
+          ],
+          "age_dist": [
+            367,
+            742,
+            369,
+            418
+          ]
+        }
+      ]
+    },
+    "demo_bal": {
+      "final": {
+        "overall_acc": 0.6334106728538283,
+        "balanced_acc": 0.6025174770477696,
+        "groups": {
+          "White/Male": {
+            "acc": 0.6038426349496798,
+            "n": 1093
+          },
+          "White/Female": {
+            "acc": 0.5752979414951246,
+            "n": 923
+          },
+          "Black/Male": {
+            "acc": 0.5944206008583691,
+            "n": 466
+          },
+          "Black/Female": {
+            "acc": 0.6082004555808656,
+            "n": 439
+          },
+          "Asian/Male": {
+            "acc": 0.7329192546583851,
+            "n": 322
+          },
+          "Asian/Female": {
+            "acc": 0.7890410958904109,
+            "n": 365
+          },
+          "Indian/Male": {
+            "acc": 0.5986696230598669,
+            "n": 451
+          },
+          "Indian/Female": {
+            "acc": 0.7122093023255814,
+            "n": 344
+          },
+          "Other/Male": {
+            "acc": 0.6225165562913907,
+            "n": 151
+          },
+          "Other/Female": {
+            "acc": 0.7219251336898396,
+            "n": 187
+          }
+        },
+        "worst_group": 0.5752979414951246,
+        "best_group": 0.7890410958904109,
+        "gap": 0.21374315439528635,
+        "std_across_groups": 0.07130215083368252
+      },
+      "history": [
+        {
+          "round": 10,
+          "overall_acc": 0.6485973423328412,
+          "balanced_acc": 0.6125592667690771,
+          "worst_group": 0.5827814569536424,
+          "best_group": 0.7972602739726027,
+          "gap": 0.21447881701896032,
+          "std_across_groups": 0.07008855648352338
+        },
+        {
+          "round": 20,
+          "overall_acc": 0.6460662307530057,
+          "balanced_acc": 0.6167225264104315,
+          "worst_group": 0.5926327193932828,
+          "best_group": 0.7890410958904109,
+          "gap": 0.19640837649712817,
+          "std_across_groups": 0.06953718731936323
+        },
+        {
+          "round": 30,
+          "overall_acc": 0.6395275258384308,
+          "balanced_acc": 0.6066340654974207,
+          "worst_group": 0.5731310942578548,
+          "best_group": 0.7917808219178082,
+          "gap": 0.21864972765995339,
+          "std_across_groups": 0.0663557725364007
+        },
+        {
+          "round": 40,
+          "overall_acc": 0.6365745623286226,
+          "balanced_acc": 0.6093697347807397,
+          "worst_group": 0.5708154506437768,
+          "best_group": 0.7917808219178082,
+          "gap": 0.22096537127403137,
+          "std_across_groups": 0.07144616865614546
+        },
+        {
+          "round": 50,
+          "overall_acc": 0.6334106728538283,
+          "balanced_acc": 0.6025174770477696,
+          "worst_group": 0.5752979414951246,
+          "best_group": 0.7890410958904109,
+          "gap": 0.21374315439528635,
+          "std_across_groups": 0.07130215083368252
+        }
+      ],
+      "clients": [
+        {
+          "client": 0,
+          "n_before": 1897,
+          "n_after": 4460,
+          "imbalance_ratio": 2.175141242937853,
+          "resampled": true,
+          "race_dist": [
+            812,
+            370,
+            260,
+            331,
+            124
+          ],
+          "gender_dist": [
+            984,
+            913
+          ],
+          "age_dist": [
+            444,
+            699,
+            343,
+            411
+          ]
+        },
+        {
+          "client": 1,
+          "n_before": 1897,
+          "n_after": 4540,
+          "imbalance_ratio": 2.163793103448276,
+          "resampled": true,
+          "race_dist": [
+            810,
+            346,
+            288,
+            327,
+            126
+          ],
+          "gender_dist": [
+            993,
+            904
+          ],
+          "age_dist": [
+            384,
+            798,
+            365,
+            350
+          ]
+        },
+        {
+          "client": 2,
+          "n_before": 1897,
+          "n_after": 4320,
+          "imbalance_ratio": 2.259154929577465,
+          "resampled": true,
+          "race_dist": [
+            796,
+            358,
+            280,
+            335,
+            128
+          ],
+          "gender_dist": [
+            987,
+            910
+          ],
+          "age_dist": [
+            256,
+            971,
+            369,
+            301
+          ]
+        },
+        {
+          "client": 3,
+          "n_before": 1897,
+          "n_after": 4460,
+          "imbalance_ratio": 2.048780487804878,
+          "resampled": true,
+          "race_dist": [
+            822,
+            325,
+            279,
+            336,
+            135
+          ],
+          "gender_dist": [
+            999,
+            898
+          ],
+          "age_dist": [
+            335,
+            885,
+            346,
+            331
+          ]
+        },
+        {
+          "client": 4,
+          "n_before": 1896,
+          "n_after": 4280,
+          "imbalance_ratio": 1.9946380697050938,
+          "resampled": true,
+          "race_dist": [
+            794,
+            371,
+            276,
+            295,
+            160
+          ],
+          "gender_dist": [
+            971,
+            925
+          ],
+          "age_dist": [
+            443,
+            737,
+            388,
+            328
+          ]
+        },
+        {
+          "client": 5,
+          "n_before": 1896,
+          "n_after": 4120,
+          "imbalance_ratio": 2.183844011142061,
+          "resampled": true,
+          "race_dist": [
+            796,
+            361,
+            297,
+            313,
+            129
+          ],
+          "gender_dist": [
+            979,
+            917
+          ],
+          "age_dist": [
+            455,
+            830,
+            330,
+            281
+          ]
+        },
+        {
+          "client": 6,
+          "n_before": 1896,
+          "n_after": 4110,
+          "imbalance_ratio": 1.8811369509043927,
+          "resampled": true,
+          "race_dist": [
+            794,
+            379,
+            276,
+            326,
+            121
+          ],
+          "gender_dist": [
+            989,
+            907
+          ],
+          "age_dist": [
+            413,
+            656,
+            368,
+            459
+          ]
+        },
+        {
+          "client": 7,
+          "n_before": 1896,
+          "n_after": 4280,
+          "imbalance_ratio": 2.4682779456193353,
+          "resampled": true,
+          "race_dist": [
+            784,
+            386,
+            261,
+            313,
+            152
+          ],
+          "gender_dist": [
+            975,
+            921
+          ],
+          "age_dist": [
+            322,
+            800,
+            337,
+            437
+          ]
+        },
+        {
+          "client": 8,
+          "n_before": 1896,
+          "n_after": 4450,
+          "imbalance_ratio": 2.291176470588235,
+          "resampled": true,
+          "race_dist": [
+            819,
+            357,
+            265,
+            308,
+            147
+          ],
+          "gender_dist": [
+            1007,
+            889
+          ],
+          "age_dist": [
+            351,
+            783,
+            341,
+            421
+          ]
+        },
+        {
+          "client": 9,
+          "n_before": 1896,
+          "n_after": 4820,
+          "imbalance_ratio": 2.0217983651226157,
+          "resampled": true,
+          "race_dist": [
+            835,
+            368,
+            265,
+            296,
+            132
+          ],
+          "gender_dist": [
+            1024,
+            872
+          ],
+          "age_dist": [
+            366,
+            848,
+            340,
+            342
+          ]
+        }
+      ]
+    }
+  }
+}
