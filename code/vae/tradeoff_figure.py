@@ -37,8 +37,29 @@ plt.rcParams.update({
 })
 
 
-def load_runs(paths_by_lambda):
-    """Read each debias result file and pull out removal + final reconstruction."""
+def load_runs(paths_by_lambda, metric='LogReg'):
+    """
+    Read each debias result file and pull out removal + final reconstruction.
+
+    -------------------------------------------------------------------------
+    WHY metric='LogReg' (metric-consistency patch)
+    -------------------------------------------------------------------------
+    The stored 'pct_removed' field was computed inside debias.py from the MLP
+    probe. MLPClassifier(early_stopping=True) draws an internal validation
+    split from its random_state, so its balanced accuracy is not
+    bit-reproducible across the two call sites (probes.py for fig1 vs
+    debias.py for the baseline); the MLP 'before' therefore reads ~0.007
+    higher than fig1's MLP, and fig1's headline could not be reconciled with
+    fig5/fig6.
+
+    The linear LogReg probe is deterministic and matches fig1 to 4 decimals.
+    So we IGNORE the stored MLP-derived pct_removed and recompute removal here
+    from the LogReg before/after values that debias.py already saved for every
+    attribute. Result: fig1, fig5 and fig6 are all locked to the same
+    reproducible linear-probe metric. Pass metric='MLP' to recover the old
+    behaviour.
+    -------------------------------------------------------------------------
+    """
     runs = []
     for lam, path in sorted(paths_by_lambda.items()):
         if not os.path.exists(path):
@@ -46,13 +67,23 @@ def load_runs(paths_by_lambda):
             continue
         with open(path) as f:
             d = json.load(f)
+
+        removed = {}
+        for a in ATTR_STYLE:
+            before = d['before'][a][metric]
+            after = d['after'][a][metric]
+            chance = d['before'][a]['chance']
+            removed[a] = ((before - after) / (before - chance) * 100
+                          if before > chance else 0.0)
+
         runs.append({
             'lambda': lam,
             'recon': d['history'][-1]['recon'],
             'kl': d['history'][-1]['kl'],
-            'removed': {a: d['after'][a]['pct_removed'] for a in ATTR_STYLE},
-            'after_mlp': {a: d['after'][a]['MLP'] for a in ATTR_STYLE},
-            'before_mlp': {a: d['before'][a]['MLP'] for a in ATTR_STYLE},
+            'metric': metric,
+            'removed': removed,
+            'after_probe': {a: d['after'][a][metric] for a in ATTR_STYLE},
+            'before_probe': {a: d['before'][a][metric] for a in ATTR_STYLE},
             'chance': {a: d['before'][a]['chance'] for a in ATTR_STYLE},
         })
     return runs
@@ -90,6 +121,10 @@ def make_figure(runs, out_path, ref_recon, ref_label):
     ax1.set_axisbelow(True)
 
     # ---- right: removal vs reconstruction cost ----
+    # per-attribute label offsets so the lambda annotations don't stack where
+    # curves converge (esp. gender/age near lambda=50); race up, gender slight
+    # up, age pushed below its marker
+    offsets = {'gender': (6, 5), 'race': (6, 8), 'age_bucket': (6, -12)}
     for attr, (color, marker, label) in ATTR_STYLE.items():
         x = [r['recon'] for r in runs]
         y = [r['removed'][attr] for r in runs]
@@ -97,7 +132,7 @@ def make_figure(runs, out_path, ref_recon, ref_label):
                  linewidth=2, markersize=8, alpha=0.9)
         for xi, yi, r in zip(x, y, runs):
             ax2.annotate(f"$\\lambda$={int(r['lambda'])}", (xi, yi),
-                         textcoords='offset points', xytext=(6, 5),
+                         textcoords='offset points', xytext=offsets[attr],
                          fontsize=8.5, color=color)
 
     ax2.axvline(ref_recon, color=CB['red'], linestyle='--', linewidth=1.8)
@@ -108,7 +143,9 @@ def make_figure(runs, out_path, ref_recon, ref_label):
     ax2.set_xlabel('reconstruction loss  (higher = worse representation)')
     ax2.set_ylabel('above-chance signal removed (%)')
     ax2.set_title('No operating point offers removal without cost')
-    ax2.legend(frameon=False, loc='lower left')
+    # origin cluster (lower-left) and the race peak (upper area) are both busy;
+    # the empty band is mid-right, below the race descent
+    ax2.legend(frameon=False, loc='center right', bbox_to_anchor=(1.0, 0.42))
     ax2.grid(alpha=0.25, linewidth=0.6)
     ax2.set_axisbelow(True)
 
@@ -127,7 +164,7 @@ def make_residual_figure(runs, out_path):
     x = np.arange(len(lams))
 
     for i, (attr, (color, _, label)) in enumerate(ATTR_STYLE.items()):
-        vals = [r['after_mlp'][attr] for r in runs]
+        vals = [r['after_probe'][attr] for r in runs]
         bars = ax.bar(x + (i - 1) * width, vals, width,
                       color=color, label=label)
         chance = runs[0]['chance'][attr]
@@ -140,7 +177,7 @@ def make_residual_figure(runs, out_path):
 
     # baseline (before any debiasing) spans
     for i, (attr, (color, _, _)) in enumerate(ATTR_STYLE.items()):
-        b0 = runs[0]['before_mlp'][attr]
+        b0 = runs[0]['before_probe'][attr]
         ax.hlines(b0, x[0] + (i - 1) * width - width / 2,
                   x[-1] + (i - 1) * width + width / 2,
                   colors=color, linestyles='--', linewidth=1.4, alpha=0.7)
@@ -170,6 +207,10 @@ def main():
                         'shares the same number of extra training epochs.')
     p.add_argument('--ref_recon', type=float, default=None,
                    help='Override the reference reconstruction loss directly.')
+    p.add_argument('--metric', choices=['LogReg', 'MLP'], default='LogReg',
+                   help='Probe whose balanced accuracy defines removal. '
+                        'LogReg is deterministic and matches fig1 exactly; '
+                        'MLP reproduces the earlier (non-reproducible) figures.')
     args = p.parse_args()
 
     paths = {
@@ -179,10 +220,12 @@ def main():
         50: os.path.join(args.results_dir, 'debias_lam50.json'),
     }
 
-    runs = load_runs(paths)
+    runs = load_runs(paths, metric=args.metric)
     if len(runs) < 2:
         print("need at least two runs")
         return
+    print(f"Removal metric: {args.metric} balanced accuracy "
+          f"({'deterministic, matches fig1' if args.metric == 'LogReg' else 'MLP, not reproducible'})")
 
     # anchor utility cost to the weakest adversarial run unless overridden
     if args.ref_recon is not None:
