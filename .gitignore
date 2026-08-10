@@ -6,3 +6,6 @@ latents/
 __pycache__/
 *.pyc
 *.zip
+code/adv-debiasing/
+code/fairread/
+code/fedar/
