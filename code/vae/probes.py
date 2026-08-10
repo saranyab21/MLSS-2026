@@ -2,7 +2,10 @@
 Experiment A: demographic leakage probes.
 
 Trains three probe families (logistic regression, linear SVM, MLP) to predict
-gender, race, and age bucket from the frozen VAE latent space.
+demographic attributes from the frozen VAE latent space. When the latents come
+from RAF-DB, the human-annotated emotion label is probed alongside them: if
+both the task signal and the demographic signal are recoverable from the same
+128 dimensions, they share latent directions.
 
 Three controls are reported alongside every result:
   - stratified dummy (respects class priors)
@@ -31,10 +34,17 @@ warnings.filterwarnings('ignore', category=UserWarning)
 warnings.filterwarnings('ignore', category=FutureWarning)
 
 
-TARGETS = {
+TARGETS_COMMON = {
     'gender': {'n_classes': 2, 'names': ['Male', 'Female']},
     'race':   {'n_classes': 5, 'names': ['White', 'Black', 'Asian', 'Indian', 'Other']},
     'age_bucket': {'n_classes': 4, 'names': ['0-19', '20-34', '35-49', '50+']},
+}
+
+# Present only in the RAF-DB latents. Human-annotated, unlike the demographics.
+TARGET_EMOTION = {
+    'emotion': {'n_classes': 7,
+                'names': ['Surprise', 'Fear', 'Disgust', 'Happy',
+                          'Sad', 'Anger', 'Neutral']},
 }
 
 
@@ -97,23 +107,37 @@ def main():
     tr_mask = split == 'train'
     te_mask = split == 'test'
 
-    print(f"Latents: {mu.shape}")
-    print(f"  probe-train {tr_mask.sum()}  |  probe-test {te_mask.sum()}\n")
+    # Probe the emotion task too, when the latents carry it. Emotion goes first
+    # because it is the task the representation was ostensibly built for.
+    targets = dict(TARGETS_COMMON)
+    if 'emotion' in d.files:
+        targets = {**TARGET_EMOTION, **TARGETS_COMMON}
+
+    dataset = str(d['dataset']) if 'dataset' in d.files else 'unknown'
+    print(f"Latents: {mu.shape}  (dataset: {dataset})")
+    print(f"  probe-train {tr_mask.sum()}  |  probe-test {te_mask.sum()}")
+    if 'emotion' in d.files:
+        print("  emotion labels present: probing the downstream task as well")
+    print()
 
     # Standardize using train statistics only
     scaler = StandardScaler().fit(mu[tr_mask])
     X_tr = scaler.transform(mu[tr_mask])
     X_te = scaler.transform(mu[te_mask])
 
-    results = {}
+    results = {'_dataset': dataset}
 
-    for target, meta in TARGETS.items():
+    for target, meta in targets.items():
         y = d[target]
         y_tr, y_te = y[tr_mask], y[te_mask]
         n_classes = meta['n_classes']
 
+        kind = 'human-annotated' if target == 'emotion' else 'model-inferred'
+        if dataset != 'rafdb':
+            kind = 'ground truth'
+
         print("=" * 72)
-        print(f"TARGET: {target}  ({n_classes} classes)")
+        print(f"TARGET: {target}  ({n_classes} classes, {kind})")
         print("=" * 72)
 
         # class distribution in the test split, for context
@@ -122,8 +146,8 @@ def main():
                          for i in range(n_classes))
         print(f"test distribution: {dist}\n")
 
-        results[target] = {'n_classes': n_classes, 'probes': {}, 'baselines': {},
-                           'null_control': {}}
+        results[target] = {'n_classes': n_classes, 'label_kind': kind,
+                           'probes': {}, 'baselines': {}, 'null_control': {}}
 
         # --- baselines ---
         for name, clf in make_baselines(args.seed).items():
@@ -173,6 +197,19 @@ def main():
         lift = best[1]['balanced_accuracy'] - chance
         print(f"\n  best probe: {best[0]} at {best[1]['balanced_accuracy']:.4f} "
               f"({lift:+.4f} over chance {chance:.4f})\n")
+
+    # If both emotion and demographics were probed, summarise the overlap claim.
+    if 'emotion' in targets:
+        print("=" * 72)
+        print("TASK vs DEMOGRAPHIC SIGNAL, same 128 dimensions")
+        print("-" * 72)
+        for t in targets:
+            b = max(results[t]['probes'].values(),
+                    key=lambda r: r['balanced_accuracy'])
+            ch = 1.0 / results[t]['n_classes']
+            print(f"  {t:<12} {b['balanced_accuracy']:.4f}  "
+                  f"(chance {ch:.4f}, lift {b['balanced_accuracy']-ch:+.4f})")
+        print("=" * 72 + "\n")
 
     os.makedirs(os.path.dirname(args.output), exist_ok=True)
     with open(args.output, 'w') as f:

@@ -1,9 +1,11 @@
 """
 Experiment B: does FedAR-style resampling fix subgroup disparity?
 
-Simulates FedAvg on the cached VAE latents. The downstream task is age-bucket
-classification (4 classes, naturally imbalanced), substituting for emotion.
-Race and gender are held out as sensitive attributes and never seen by any model.
+Simulates FedAvg on the cached VAE latents. The downstream task is emotion
+classification on RAF-DB (7 classes, natively imbalanced at IMR ~16.8, close
+to the AffectNet setting FedAR was designed for) or age-bucket classification
+on UTKFace (4 classes, mildly imbalanced). Race and gender are held out as
+sensitive attributes and never seen by any model.
 
 Three conditions:
   none      - no resampling, the naive federated baseline
@@ -28,7 +30,14 @@ import torch.nn.functional as F
 
 RACE_NAMES = ['White', 'Black', 'Asian', 'Indian', 'Other']
 GENDER_NAMES = ['Male', 'Female']
-AGE_NAMES = ['0-19', '20-34', '35-49', '50+']
+
+TASKS = {
+    'age_bucket': {'n_classes': 4,
+                   'names': ['0-19', '20-34', '35-49', '50+']},
+    'emotion':    {'n_classes': 7,
+                   'names': ['Surprise', 'Fear', 'Disgust', 'Happy',
+                             'Sad', 'Anger', 'Neutral']},
+}
 
 
 # --------------------------------------------------------------------------
@@ -98,6 +107,24 @@ def demographic_balance(X, y, race, gender, rng):
     return X[sel], y[sel]
 
 
+def induce_imbalance(X, y, race, gender, keep_fractions, rng):
+    """
+    Subsample task classes to create severe imbalance, mimicking the
+    class distribution FedAR was designed for (AffectNet IMR ~18.7).
+
+    keep_fractions: one fraction per task class, in class order.
+    Unnecessary on RAF-DB emotion, which is already at IMR ~16.8.
+    """
+    keep = []
+    for c, frac in enumerate(keep_fractions):
+        pool = np.where(y == c)[0]
+        n_keep = max(1, int(len(pool) * frac))
+        keep.append(rng.choice(pool, size=n_keep, replace=False))
+    sel = np.concatenate(keep)
+    rng.shuffle(sel)
+    return X[sel], y[sel], race[sel], gender[sel]
+
+
 # --------------------------------------------------------------------------
 # federated training
 # --------------------------------------------------------------------------
@@ -133,7 +160,8 @@ def fedavg(states, sizes):
 # evaluation
 # --------------------------------------------------------------------------
 
-def subgroup_report(model, X_te, y_te, race_te, gender_te, device):
+def subgroup_report(model, X_te, y_te, race_te, gender_te, device,
+                    n_classes, min_group=25):
     """Overall accuracy plus a race x gender breakdown."""
     model.eval()
     with torch.no_grad():
@@ -144,14 +172,15 @@ def subgroup_report(model, X_te, y_te, race_te, gender_te, device):
     overall = correct.mean()
 
     # balanced accuracy over the task classes
-    per_class = [correct[y_te == c].mean() for c in range(4) if (y_te == c).sum() > 0]
+    per_class = [correct[y_te == c].mean()
+                 for c in range(n_classes) if (y_te == c).sum() > 0]
     balanced = float(np.mean(per_class))
 
     groups = {}
-    for r in range(5):
-        for g in range(2):
+    for r in range(len(RACE_NAMES)):
+        for g in range(len(GENDER_NAMES)):
             m = (race_te == r) & (gender_te == g)
-            if m.sum() < 25:          # too small to be meaningful
+            if m.sum() < min_group:          # too small to be meaningful
                 continue
             name = f"{RACE_NAMES[r]}/{GENDER_NAMES[g]}"
             groups[name] = {'acc': float(correct[m].mean()), 'n': int(m.sum())}
@@ -165,6 +194,7 @@ def subgroup_report(model, X_te, y_te, race_te, gender_te, device):
         'best_group': float(max(accs)),
         'gap': float(max(accs) - min(accs)),
         'std_across_groups': float(np.std(accs)),
+        'n_groups_evaluated': len(groups),
     }
 
 
@@ -172,7 +202,7 @@ def subgroup_report(model, X_te, y_te, race_te, gender_te, device):
 # one full run
 # --------------------------------------------------------------------------
 
-def run_condition(condition, data, args, device):
+def run_condition(condition, data, args, device, n_classes):
     rng = np.random.default_rng(args.seed)
     X_tr, y_tr, race_tr, gender_tr = data['train']
     X_te, y_te, race_te, gender_te = data['test']
@@ -184,7 +214,7 @@ def run_condition(condition, data, args, device):
     for ci, idx in enumerate(parts):
         Xc, yc = X_tr[idx], y_tr[idx]
         rc, gc = race_tr[idx], gender_tr[idx]
-        imr = imbalance_ratio(yc, 4)
+        imr = imbalance_ratio(yc, n_classes)
         n_before = len(Xc)
         resampled = False
 
@@ -202,14 +232,14 @@ def run_condition(condition, data, args, device):
             'n_after': len(Xc),
             'imbalance_ratio': float(imr),
             'resampled': resampled,
-            'race_dist': np.bincount(rc, minlength=5).tolist(),
-            'gender_dist': np.bincount(gc, minlength=2).tolist(),
-            'age_dist': np.bincount(yc[:n_before], minlength=4).tolist(),
+            'race_dist': np.bincount(rc, minlength=len(RACE_NAMES)).tolist(),
+            'gender_dist': np.bincount(gc, minlength=len(GENDER_NAMES)).tolist(),
+            'task_dist': np.bincount(y_tr[idx], minlength=n_classes).tolist(),
         })
 
     # federated averaging
     torch.manual_seed(args.seed)
-    global_model = Classifier(in_dim=X_tr.shape[1], n_classes=4).to(device)
+    global_model = Classifier(in_dim=X_tr.shape[1], n_classes=n_classes).to(device)
     history = []
 
     for rnd in range(1, args.rounds + 1):
@@ -225,31 +255,17 @@ def run_condition(condition, data, args, device):
 
         if rnd % args.eval_every == 0 or rnd == args.rounds:
             rep = subgroup_report(global_model, X_te, y_te,
-                                  race_te, gender_te, device)
+                                  race_te, gender_te, device, n_classes)
             history.append({'round': rnd, **{k: v for k, v in rep.items()
                                              if k != 'groups'}})
             print(f"  round {rnd:3d} | acc {rep['overall_acc']:.4f} | "
                   f"bal {rep['balanced_acc']:.4f} | worst {rep['worst_group']:.4f} | "
                   f"gap {rep['gap']:.4f}", flush=True)
 
-    final = subgroup_report(global_model, X_te, y_te, race_te, gender_te, device)
+    final = subgroup_report(global_model, X_te, y_te, race_te, gender_te,
+                            device, n_classes)
     return {'final': final, 'history': history, 'clients': meta}
 
-def induce_imbalance(X, y, race, gender, keep_fractions, rng):
-    """
-    Subsample task classes to create severe imbalance, mimicking the
-    class distribution FedAR was designed for (AffectNet IMR ~18.7).
-
-    keep_fractions: list of length 4, fraction of each age bucket to retain.
-    """
-    keep = []
-    for c, frac in enumerate(keep_fractions):
-        pool = np.where(y == c)[0]
-        n_keep = max(1, int(len(pool) * frac))
-        keep.append(rng.choice(pool, size=n_keep, replace=False))
-    sel = np.concatenate(keep)
-    rng.shuffle(sel)
-    return X[sel], y[sel], race[sel], gender[sel]
 
 # --------------------------------------------------------------------------
 
@@ -257,6 +273,9 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument('--latents', default='../../latents/utkface_latents.npz')
     p.add_argument('--output', default='../../results/federated_results.json')
+    p.add_argument('--task', choices=['age_bucket', 'emotion'], default=None,
+                   help='Downstream task. Defaults to emotion when the latents '
+                        'carry it, otherwise age_bucket.')
     p.add_argument('--n_clients', type=int, default=10)
     p.add_argument('--rounds', type=int, default=50)
     p.add_argument('--local_epochs', type=int, default=2)
@@ -266,9 +285,10 @@ def main():
     p.add_argument('--eval_every', type=int, default=10)
     p.add_argument('--seed', type=int, default=42)
     p.add_argument('--skew', type=str, default=None,
-                   help='Comma-separated keep-fractions per age bucket, '
+                   help='Comma-separated keep-fractions, one per task class, '
                         'e.g. "0.05,1.0,0.5,0.15". Applied to the training '
-                        'split only; the test split stays untouched.')
+                        'split only; the test split stays untouched. Not needed '
+                        'for RAF-DB emotion, which is already severely imbalanced.')
     args = p.parse_args()
 
     device = torch.device('cpu')   # 128-dim vectors, CPU is fine and avoids contention
@@ -277,39 +297,58 @@ def main():
     mu, split = d['mu'], d['split']
     tr, te = split == 'train', split == 'test'
 
+    # pick the task
+    task = args.task
+    if task is None:
+        task = 'emotion' if 'emotion' in d.files else 'age_bucket'
+    if task not in d.files:
+        raise ValueError(f"Latents do not contain '{task}'. "
+                         f"Available: {[f for f in d.files]}")
+    n_classes = TASKS[task]['n_classes']
+    dataset = str(d['dataset']) if 'dataset' in d.files else 'unknown'
+
+    print(f"Dataset: {dataset}  |  task: {task} ({n_classes} classes)")
+    if dataset == 'rafdb':
+        print("Note: emotion labels are human-annotated; race/gender are "
+              "model-inferred (FairFace).")
+
     # standardize on train statistics
     m, s = mu[tr].mean(0), mu[tr].std(0) + 1e-8
     data = {
-        'train': ((mu[tr] - m) / s, d['age_bucket'][tr], d['race'][tr], d['gender'][tr]),
-        'test':  ((mu[te] - m) / s, d['age_bucket'][te], d['race'][te], d['gender'][te]),
+        'train': ((mu[tr] - m) / s, d[task][tr], d['race'][tr], d['gender'][tr]),
+        'test':  ((mu[te] - m) / s, d[task][te], d['race'][te], d['gender'][te]),
     }
+
+    # report the native imbalance before any intervention
+    native = np.bincount(data['train'][1], minlength=n_classes)
+    native_imr = native.max() / native[native > 0].min()
+    print(f"Native task distribution: {native.tolist()}  (IMR {native_imr:.1f})")
 
     # optionally induce severe task imbalance so the resampling intervention
     # has something meaningful to correct
     if args.skew:
         rng_skew = np.random.default_rng(args.seed)
         fracs = [float(f) for f in args.skew.split(',')]
-        assert len(fracs) == 4, "--skew needs 4 comma-separated fractions"
+        assert len(fracs) == n_classes, \
+            f"--skew needs {n_classes} comma-separated fractions for task '{task}'"
 
-        before = np.bincount(data['train'][1], minlength=4)
         Xs, ys, rs, gs = induce_imbalance(*data['train'], fracs, rng_skew)
         data['train'] = (Xs, ys, rs, gs)
 
-        after = np.bincount(ys, minlength=4)
-        imr_before = before.max() / before[before > 0].min()
+        after = np.bincount(ys, minlength=n_classes)
         imr_after = after.max() / after[after > 0].min()
         print(f"SKEW APPLIED: {args.skew}")
-        print(f"  before: {before.tolist()}  (IMR {imr_before:.1f}, n={before.sum()})")
         print(f"  after:  {after.tolist()}  (IMR {imr_after:.1f}, n={after.sum()})")
-        print(f"  test split unchanged: {np.bincount(data['test'][1], minlength=4).tolist()}\n")
+        print(f"  test split unchanged: "
+              f"{np.bincount(data['test'][1], minlength=n_classes).tolist()}")
 
-    print(f"train {len(data['train'][0])} | test {len(data['test'][0])} | "
+    print(f"\ntrain {len(data['train'][0])} | test {len(data['test'][0])} | "
           f"{args.n_clients} clients | {args.rounds} rounds\n")
 
     results = {}
     for cond in ['none', 'fedar', 'demo_bal']:
         print(f"{'='*70}\nCONDITION: {cond}\n{'='*70}")
-        results[cond] = run_condition(cond, data, args, device)
+        results[cond] = run_condition(cond, data, args, device, n_classes)
         f = results[cond]['final']
         n_res = sum(c['resampled'] for c in results[cond]['clients'])
         imrs = [c['imbalance_ratio'] for c in results[cond]['clients']]
@@ -319,7 +358,8 @@ def main():
         print(f"  worst group {f['worst_group']:.4f} "
               f"({min(f['groups'], key=lambda k: f['groups'][k]['acc'])})")
         print(f"  best group  {f['best_group']:.4f}")
-        print(f"  gap {f['gap']:.4f} | std {f['std_across_groups']:.4f}\n")
+        print(f"  gap {f['gap']:.4f} | std {f['std_across_groups']:.4f}  "
+              f"({f['n_groups_evaluated']} groups)\n")
 
     # side by side, with deltas against the no-intervention baseline
     base = results['none']['final']
@@ -342,7 +382,8 @@ def main():
 
     os.makedirs(os.path.dirname(args.output), exist_ok=True)
     with open(args.output, 'w') as fh:
-        json.dump({'args': vars(args), 'results': results}, fh, indent=2)
+        json.dump({'args': vars(args), 'task': task, 'dataset': dataset,
+                   'results': results}, fh, indent=2)
     print(f"Saved to {args.output}")
 
 

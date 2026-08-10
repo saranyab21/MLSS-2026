@@ -1,10 +1,14 @@
 """
-Train a ResNet-18 style VAE on UTKFace.
+Train a ResNet-18 style VAE on UTKFace or RAF-DB.
 
 Deliberately naive: reconstruction + KL loss only.
 No demographic supervision, no fairness constraint, no disentanglement term.
 The point is to observe what the representation learns when we never tell it
 what not to learn.
+
+UTKFace trains on all images; the probe split is drawn later in
+extract_latents.py. RAF-DB trains only on its native train split, so the
+official test images are never seen by the encoder.
 """
 
 import os
@@ -19,6 +23,7 @@ from torchvision import transforms
 
 from model import VAE, vae_loss
 from utkface_dataset import UTKFaceDataset, collate_labels
+from rafdb_dataset import RAFDBDataset, collate_labels as collate_rafdb
 
 
 def save_recon_grid(model, loader, device, epoch, out_dir, n=8):
@@ -40,6 +45,26 @@ def save_recon_grid(model, loader, device, epoch, out_dir, n=8):
             normalize=False,
         )
     model.train()
+
+
+def build_dataset(args, transform):
+    """Return (dataset, collate_fn) for whichever corpus was requested."""
+    if args.dataset == 'rafdb':
+        if not args.demographics:
+            raise ValueError(
+                "--demographics is required for --dataset rafdb. "
+                "Run annotate_demographics.py first."
+            )
+        ds = RAFDBDataset(
+            args.data_root,
+            args.demographics,
+            transform=transform,
+            split='train',          # hold out the official test split entirely
+        )
+        return ds, collate_rafdb
+
+    ds = UTKFaceDataset(args.data_root, transform=transform)
+    return ds, collate_labels
 
 
 def train_one_epoch(model, loader, optimizer, device, beta):
@@ -68,7 +93,10 @@ def train_one_epoch(model, loader, optimizer, device, beta):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_root', type=str, required=True,
-                        help='Path to the flat UTKFace image folder')
+                        help='UTKFace flat image folder, or RAF-DB root')
+    parser.add_argument('--dataset', choices=['utkface', 'rafdb'], default='utkface')
+    parser.add_argument('--demographics', type=str, default=None,
+                        help='Path to rafdb_demographics.csv (rafdb only)')
     parser.add_argument('--checkpoint_dir', type=str, default='../../checkpoints')
     parser.add_argument('--figure_dir', type=str, default='../../figures/recon')
     parser.add_argument('--log_file', type=str, default='../../logs/train.csv')
@@ -91,6 +119,20 @@ def main():
     print(f"Device: {device}")
     if device.type == 'cuda':
         print(f"GPU: {torch.cuda.get_device_name(0)}")
+    print(f"Dataset: {args.dataset}")
+
+    # Guard against silently overwriting the other dataset's checkpoint.
+    existing = os.path.join(args.checkpoint_dir, 'vae_best.pt')
+    if os.path.exists(existing):
+        try:
+            prev = torch.load(existing, map_location='cpu')['args'].get('dataset',
+                                                                       'utkface')
+            if prev != args.dataset:
+                print(f"\n  WARNING: {existing} was trained on '{prev}' but you are "
+                      f"training '{args.dataset}'.\n  It will be overwritten. "
+                      f"Pass a different --checkpoint_dir if that is not intended.\n")
+        except Exception:
+            pass
 
     # Horizontal flip only. No colour jitter, which would interfere with
     # exactly the appearance attributes we are studying.
@@ -100,7 +142,7 @@ def main():
         transforms.ToTensor(),
     ])
 
-    train_ds = UTKFaceDataset(args.data_root, transform=train_tf)
+    train_ds, collate = build_dataset(args, train_tf)
     train_loader = DataLoader(
         train_ds,
         batch_size=args.batch_size,
@@ -108,7 +150,7 @@ def main():
         num_workers=args.num_workers,
         pin_memory=True,
         drop_last=True,
-        collate_fn=collate_labels,
+        collate_fn=collate,
     )
     print(f"Train samples: {len(train_ds)}  |  batches/epoch: {len(train_loader)}")
 
