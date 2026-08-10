@@ -1,0 +1,62 @@
+nohup: ignoring input
+Device: cuda
+GPU: NVIDIA GeForce RTX 2080
+UTKFaceDataset: 23705 valid, 3 skipped
+Train samples: 23705  |  batches/epoch: 185
+Params: 10,171,331
+Config: latent_dim=128, beta=1.0, lr=0.0001, batch_size=128
+
+epoch   1/50 | loss    897.48 | recon    848.80 | kl   48.67 |  23.4s
+epoch   2/50 | loss    503.75 | recon    443.61 | kl   60.15 |  21.9s
+epoch   3/50 | loss    443.31 | recon    382.82 | kl   60.49 |  22.1s
+epoch   4/50 | loss    402.08 | recon    340.69 | kl   61.40 |  22.3s
+epoch   5/50 | loss    375.34 | recon    314.45 | kl   60.89 |  22.3s
+epoch   6/50 | loss    356.66 | recon    296.07 | kl   60.59 |  22.4s
+epoch   7/50 | loss    343.02 | recon    282.45 | kl   60.57 |  22.4s
+epoch   8/50 | loss    331.61 | recon    270.94 | kl   60.67 |  22.5s
+epoch   9/50 | loss    322.89 | recon    262.17 | kl   60.72 |  22.5s
+epoch  10/50 | loss    316.28 | recon    255.40 | kl   60.88 |  22.5s
+epoch  11/50 | loss    310.52 | recon    249.40 | kl   61.12 |  22.4s
+epoch  12/50 | loss    304.50 | recon    243.12 | kl   61.38 |  22.4s
+epoch  13/50 | loss    301.09 | recon    239.54 | kl   61.56 |  22.5s
+epoch  14/50 | loss    297.37 | recon    235.64 | kl   61.73 |  22.5s
+epoch  15/50 | loss    294.04 | recon    232.20 | kl   61.84 |  22.5s
+epoch  16/50 | loss    291.81 | recon    229.94 | kl   61.87 |  22.5s
+epoch  17/50 | loss    288.31 | recon    226.17 | kl   62.14 |  22.5s
+epoch  18/50 | loss    286.64 | recon    224.58 | kl   62.06 |  22.5s
+epoch  19/50 | loss    283.72 | recon    221.53 | kl   62.19 |  22.5s
+epoch  20/50 | loss    281.61 | recon    219.12 | kl   62.49 |  22.5s
+epoch  21/50 | loss    280.10 | recon    217.49 | kl   62.60 |  22.4s
+epoch  22/50 | loss    278.33 | recon    215.59 | kl   62.74 |  22.4s
+epoch  23/50 | loss    277.30 | recon    214.31 | kl   62.99 |  22.4s
+epoch  24/50 | loss    274.77 | recon    211.53 | kl   63.24 |  22.4s
+epoch  25/50 | loss    273.85 | recon    210.35 | kl   63.50 |  22.4s
+epoch  26/50 | loss    272.17 | recon    208.31 | kl   63.86 |  22.4s
+epoch  27/50 | loss    271.32 | recon    207.34 | kl   63.99 |  22.4s
+epoch  28/50 | loss    270.24 | recon    206.11 | kl   64.14 |  22.4s
+epoch  29/50 | loss    267.75 | recon    203.37 | kl   64.39 |  22.4s
+epoch  30/50 | loss    265.96 | recon    201.43 | kl   64.53 |  22.4s
+epoch  31/50 | loss    265.36 | recon    200.56 | kl   64.80 |  22.4s
+epoch  32/50 | loss    263.81 | recon    198.91 | kl   64.90 |  22.4s
+epoch  33/50 | loss    263.92 | recon    198.87 | kl   65.05 |  22.4s
+epoch  34/50 | loss    262.11 | recon    196.90 | kl   65.21 |  22.4s
+epoch  35/50 | loss    261.32 | recon    195.98 | kl   65.34 |  22.4s
+epoch  36/50 | loss    260.37 | recon    194.89 | kl   65.48 |  22.5s
+epoch  37/50 | loss    258.67 | recon    193.15 | kl   65.51 |  22.4s
+epoch  38/50 | loss    258.05 | recon    192.25 | kl   65.80 |  22.4s
+epoch  39/50 | loss    257.79 | recon    191.95 | kl   65.84 |  22.4s
+epoch  40/50 | loss    256.54 | recon    190.56 | kl   65.98 |  22.4s
+epoch  41/50 | loss    255.66 | recon    189.57 | kl   66.09 |  22.4s
+epoch  42/50 | loss    254.47 | recon    188.21 | kl   66.25 |  22.4s
+epoch  43/50 | loss    254.30 | recon    188.04 | kl   66.26 |  22.4s
+epoch  44/50 | loss    253.78 | recon    187.32 | kl   66.45 |  22.4s
+epoch  45/50 | loss    253.61 | recon    186.97 | kl   66.64 |  22.4s
+epoch  46/50 | loss    251.90 | recon    185.27 | kl   66.63 |  22.4s
+epoch  47/50 | loss    252.39 | recon    185.69 | kl   66.69 |  22.4s
+epoch  48/50 | loss    250.61 | recon    183.79 | kl   66.81 |  22.4s
+epoch  49/50 | loss    251.10 | recon    184.15 | kl   66.95 |  22.4s
+epoch  50/50 | loss    249.94 | recon    182.98 | kl   66.97 |  22.4s
+
+Done. Best loss: 249.94
+Checkpoint: ../../checkpoints/vae_best.pt
+Reconstruction grids: ../../figures/recon

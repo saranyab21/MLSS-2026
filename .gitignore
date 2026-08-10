@@ -7,3 +7,10 @@ __pycache__/
 code/adv-debiasing/
 code/fairread/
 code/fedar/
+weights/
+checkpoints/
+latents/
+data/
+venv/
+__pycache__/
+*.pyc
