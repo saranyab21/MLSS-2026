@@ -173,7 +173,7 @@ class RAFDBDataset(Dataset):
 
         print(f"\n{'='*58}")
         print(f"RAF-DB composition (N = {n})")
-        print(f"demographics are MODEL-INFERRED (DeepFace), not ground truth")
+        print(f"demographics are MODEL-INFERRED (FairFace), not ground truth")
         print(f"{'='*58}")
 
         print("\nEmotion (human-annotated)")
