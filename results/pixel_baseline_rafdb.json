@@ -1,0 +1,145 @@
+{
+  "dataset": "rafdb",
+  "latent_dim": 128,
+  "results": {
+    "VAE latent (128)": {
+      "dim": 128,
+      "targets": {
+        "emotion": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.4966193014931107,
+          "auroc": 0.8574798183960765,
+          "chance": 0.14285714285714285,
+          "lift": 0.3537621586359678
+        },
+        "gender": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.752856943063483,
+          "auroc": 0.8345838149281573,
+          "chance": 0.5,
+          "lift": 0.25285694306348305
+        },
+        "race": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.4390827204275663,
+          "auroc": 0.8260725249356404,
+          "chance": 0.2,
+          "lift": 0.2390827204275663
+        },
+        "age_bucket": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.515158450088371,
+          "auroc": 0.8129977500842415,
+          "chance": 0.25,
+          "lift": 0.265158450088371
+        }
+      }
+    },
+    "PCA128 of 16x16 grey": {
+      "dim": 128,
+      "targets": {
+        "emotion": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.477549577098589,
+          "auroc": 0.8511099308940074,
+          "chance": 0.14285714285714285,
+          "lift": 0.3346924342414461
+        },
+        "gender": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.7617222553558516,
+          "auroc": 0.8368497725965568,
+          "chance": 0.5,
+          "lift": 0.2617222553558516
+        },
+        "race": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.42295651117157906,
+          "auroc": 0.7972614379084668,
+          "chance": 0.2,
+          "lift": 0.22295651117157905
+        },
+        "age_bucket": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.496774409877024,
+          "auroc": 0.8066589153663916,
+          "chance": 0.25,
+          "lift": 0.24677440987702398
+        }
+      }
+    },
+    "PCA128 of 32x32 RGB": {
+      "dim": 128,
+      "targets": {
+        "emotion": {
+          "best_probe": "LogReg",
+          "balanced_accuracy": 0.4931310639257438,
+          "auroc": 0.8651703521712231,
+          "chance": 0.14285714285714285,
+          "lift": 0.35027392106860095
+        },
+        "gender": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.7818463654770158,
+          "auroc": 0.8575407440911026,
+          "chance": 0.5,
+          "lift": 0.2818463654770158
+        },
+        "race": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.463056181455942,
+          "auroc": 0.8320309573095857,
+          "chance": 0.2,
+          "lift": 0.263056181455942
+        },
+        "age_bucket": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.5150271721201646,
+          "auroc": 0.8071122396805739,
+          "chance": 0.25,
+          "lift": 0.2650271721201646
+        }
+      }
+    },
+    "raw 16x16 grey (256)": {
+      "dim": 256,
+      "targets": {
+        "emotion": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.5323710756216772,
+          "auroc": 0.8724843141833303,
+          "chance": 0.14285714285714285,
+          "lift": 0.38951393276453433
+        },
+        "gender": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.760190645660843,
+          "auroc": 0.8369165121808242,
+          "chance": 0.5,
+          "lift": 0.26019064566084305
+        },
+        "race": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.40953698748679973,
+          "auroc": 0.8209828825790808,
+          "chance": 0.2,
+          "lift": 0.20953698748679972
+        },
+        "age_bucket": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.5213028172756444,
+          "auroc": 0.8136437743967319,
+          "chance": 0.25,
+          "lift": 0.2713028172756444
+        }
+      }
+    }
+  },
+  "vae_advantage": {
+    "emotion": 0.003488237567366881,
+    "gender": -0.02898942241353275,
+    "race": -0.02397346102837572,
+    "age_bucket": 0.00013127796820644466
+  },
+  "mean_demographic_advantage": -0.017610535157900675
+}

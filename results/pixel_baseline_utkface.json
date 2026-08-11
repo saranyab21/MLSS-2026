@@ -1,0 +1,116 @@
+{
+  "dataset": "utkface",
+  "latent_dim": 128,
+  "results": {
+    "VAE latent (128)": {
+      "dim": 128,
+      "targets": {
+        "gender": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.8689923187150034,
+          "auroc": 0.9429898330792882,
+          "chance": 0.5,
+          "lift": 0.3689923187150034
+        },
+        "race": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.6189655256469645,
+          "auroc": 0.8913319250000116,
+          "chance": 0.2,
+          "lift": 0.4189655256469645
+        },
+        "age_bucket": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.6016357334249663,
+          "auroc": 0.8479324878032758,
+          "chance": 0.25,
+          "lift": 0.35163573342496635
+        }
+      }
+    },
+    "PCA128 of 16x16 grey": {
+      "dim": 128,
+      "targets": {
+        "gender": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.8651670152430683,
+          "auroc": 0.9417597680168458,
+          "chance": 0.5,
+          "lift": 0.36516701524306827
+        },
+        "race": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.5961687680185955,
+          "auroc": 0.8834836603925117,
+          "chance": 0.2,
+          "lift": 0.3961687680185955
+        },
+        "age_bucket": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.5880068573022719,
+          "auroc": 0.8336176400311084,
+          "chance": 0.25,
+          "lift": 0.33800685730227187
+        }
+      }
+    },
+    "PCA128 of 32x32 RGB": {
+      "dim": 128,
+      "targets": {
+        "gender": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.8765411708385846,
+          "auroc": 0.9471240574079114,
+          "chance": 0.5,
+          "lift": 0.3765411708385846
+        },
+        "race": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.6215001215643706,
+          "auroc": 0.8929919010370666,
+          "chance": 0.2,
+          "lift": 0.4215001215643706
+        },
+        "age_bucket": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.6100735817068227,
+          "auroc": 0.8432057995831563,
+          "chance": 0.25,
+          "lift": 0.3600735817068227
+        }
+      }
+    },
+    "raw 16x16 grey (256)": {
+      "dim": 256,
+      "targets": {
+        "gender": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.8664325740990908,
+          "auroc": 0.9427847181917641,
+          "chance": 0.5,
+          "lift": 0.3664325740990908
+        },
+        "race": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.6070737541980589,
+          "auroc": 0.8853683603350572,
+          "chance": 0.2,
+          "lift": 0.40707375419805886
+        },
+        "age_bucket": {
+          "best_probe": "MLP",
+          "balanced_accuracy": 0.6285192730819545,
+          "auroc": 0.8592653592185278,
+          "chance": 0.25,
+          "lift": 0.37851927308195454
+        }
+      }
+    }
+  },
+  "vae_advantage": {
+    "gender": -0.007548852123581251,
+    "race": -0.002534595917406124,
+    "age_bucket": -0.008437848281856342
+  },
+  "mean_demographic_advantage": -0.006173765440947905
+}

@@ -22,6 +22,7 @@ from types import SimpleNamespace
 
 import numpy as np
 import torch
+import time
 
 from federated import run_condition, induce_imbalance, TASKS
 
@@ -96,8 +97,9 @@ def main():
     p.add_argument('--batch_size', type=int, default=64)
     p.add_argument('--lr', type=float, default=1e-3)
     p.add_argument('--imr_threshold', type=float, default=1.8)
-    p.add_argument('--eval_every', type=int, default=1000)   # silence per-round logs
+#    p.add_argument('--eval_every', type=int, default=1000)   # silence per-round logs
     p.add_argument('--skew', default=None)
+    p.add_argument('--eval_every', type=int, default=25)
     args = p.parse_args()
 
     device = torch.device('cpu')
@@ -122,6 +124,8 @@ def main():
 
         per_seed[seed] = {}
         for cond in COND:
+            t0 = time.time()
+            print(f"  {cond} ...", flush=True)
             res = run_condition(cond, data, run_args, device, n_classes)
             f = res['final']
             worst_name = min(f['groups'], key=lambda k: f['groups'][k]['acc'])
@@ -135,7 +139,7 @@ def main():
             }
             print(f"  {cond:<12} bal {f['balanced_acc']:.4f}  "
                   f"gap {f['gap']:.4f}  worst {f['worst_group']:.4f} "
-                  f"({worst_name})", flush=True)
+                  f"({worst_name})  [{time.time()-t0:.0f}s]", flush=True)
         print()
 
     # ---- absolute values, mean over seeds ----

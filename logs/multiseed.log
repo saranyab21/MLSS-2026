@@ -1,0 +1,236 @@
+nohup: ignoring input
+Dataset: unknown  |  task: age_bucket (4 classes)
+Seeds: [42, 1, 7, 13, 99]
+Skew: 0.05,1.0,0.5,0.15
+
+======================================================================
+SEED 42
+======================================================================
+  none ...
+  round  25 | acc 0.5682 | bal 0.4704 | worst 0.4745 | gap 0.2926
+  round  50 | acc 0.5606 | bal 0.4657 | worst 0.4670 | gap 0.3084
+  none         bal 0.4657  gap 0.3084  worst 0.4670 (White/Female)  [18s]
+  fedar ...
+  round  25 | acc 0.5613 | bal 0.4756 | worst 0.4739 | gap 0.3014
+  round  50 | acc 0.5587 | bal 0.4774 | worst 0.4680 | gap 0.3046
+  fedar        bal 0.4774  gap 0.3046  worst 0.4680 (White/Female)  [49s]
+  demo_bal ...
+  round  25 | acc 0.5611 | bal 0.4609 | worst 0.4648 | gap 0.3188
+  round  50 | acc 0.5604 | bal 0.4642 | worst 0.4680 | gap 0.3155
+  demo_bal     bal 0.4642  gap 0.3155  worst 0.4680 (White/Female)  [28s]
+
+======================================================================
+SEED 1
+======================================================================
+  none ...
+  round  25 | acc 0.5670 | bal 0.4641 | worst 0.4691 | gap 0.3199
+  round  50 | acc 0.5701 | bal 0.4762 | worst 0.4670 | gap 0.3330
+  none         bal 0.4762  gap 0.3330  worst 0.4670 (White/Female)  [16s]
+  fedar ...
+  round  25 | acc 0.5712 | bal 0.4841 | worst 0.4800 | gap 0.3255
+  round  50 | acc 0.5695 | bal 0.4823 | worst 0.4789 | gap 0.3129
+  fedar        bal 0.4823  gap 0.3129  worst 0.4789 (White/Female)  [45s]
+  demo_bal ...
+  round  25 | acc 0.5695 | bal 0.4656 | worst 0.4637 | gap 0.3445
+  round  50 | acc 0.5762 | bal 0.4833 | worst 0.4832 | gap 0.3278
+  demo_bal     bal 0.4833  gap 0.3278  worst 0.4832 (White/Female)  [28s]
+
+======================================================================
+SEED 7
+======================================================================
+  none ...
+  round  25 | acc 0.5693 | bal 0.4660 | worst 0.4832 | gap 0.3004
+  round  50 | acc 0.5714 | bal 0.4769 | worst 0.4843 | gap 0.3157
+  none         bal 0.4769  gap 0.3157  worst 0.4843 (White/Female)  [16s]
+  fedar ...
+  round  25 | acc 0.5727 | bal 0.4866 | worst 0.4886 | gap 0.3004
+  round  50 | acc 0.5676 | bal 0.4829 | worst 0.4810 | gap 0.3135
+  fedar        bal 0.4829  gap 0.3135  worst 0.4810 (White/Female)  [45s]
+  demo_bal ...
+  round  25 | acc 0.5733 | bal 0.4753 | worst 0.4843 | gap 0.2993
+  round  50 | acc 0.5737 | bal 0.4819 | worst 0.4951 | gap 0.2720
+  demo_bal     bal 0.4819  gap 0.2720  worst 0.4951 (White/Female)  [28s]
+
+======================================================================
+SEED 13
+======================================================================
+  none ...
+  round  25 | acc 0.5689 | bal 0.4644 | worst 0.4724 | gap 0.3112
+  round  50 | acc 0.5653 | bal 0.4670 | worst 0.4778 | gap 0.3085
+  none         bal 0.4670  gap 0.3085  worst 0.4778 (White/Female)  [16s]
+  fedar ...
+  round  25 | acc 0.5695 | bal 0.4807 | worst 0.4919 | gap 0.2807
+  round  50 | acc 0.5638 | bal 0.4773 | worst 0.4789 | gap 0.2883
+  fedar        bal 0.4773  gap 0.2883  worst 0.4789 (White/Female)  [45s]
+  demo_bal ...
+  round  25 | acc 0.5646 | bal 0.4645 | worst 0.4832 | gap 0.2921
+  round  50 | acc 0.5575 | bal 0.4602 | worst 0.4745 | gap 0.2898
+  demo_bal     bal 0.4602  gap 0.2898  worst 0.4745 (White/Female)  [29s]
+
+======================================================================
+SEED 99
+======================================================================
+  none ...
+  round  25 | acc 0.5613 | bal 0.4570 | worst 0.4680 | gap 0.3018
+  round  50 | acc 0.5518 | bal 0.4546 | worst 0.4594 | gap 0.3050
+  none         bal 0.4546  gap 0.3050  worst 0.4594 (White/Female)  [16s]
+  fedar ...
+  round  25 | acc 0.5617 | bal 0.4726 | worst 0.4843 | gap 0.2801
+  round  50 | acc 0.5539 | bal 0.4636 | worst 0.4735 | gap 0.2745
+  fedar        bal 0.4636  gap 0.2745  worst 0.4735 (White/Female)  [45s]
+  demo_bal ...
+  round  25 | acc 0.5678 | bal 0.4703 | worst 0.4865 | gap 0.2807
+  round  50 | acc 0.5598 | bal 0.4592 | worst 0.4756 | gap 0.2888
+  demo_bal     bal 0.4592  gap 0.2888  worst 0.4756 (White/Female)  [29s]
+
+==============================================================================
+ABSOLUTE  (mean +/- std over 5 seeds)
+------------------------------------------------------------------------------
+condition                     balanced acc        subgroup gap     worst group
+no intervention             0.4681 ±0.0091       0.3141 ±0.0113     0.4711
+FedAR resampling            0.4767 ±0.0078       0.2987 ±0.0170     0.4761
+demographic balancing       0.4698 ±0.0119       0.2988 ±0.0225     0.4793
+
+==============================================================================
+PAIRED DIFFERENCE vs no intervention  (computed within each seed)
+------------------------------------------------------------------------------
+
+  FedAR resampling
+    gap        -0.0154 ± 0.0121   range [-0.0305, -0.0022]   sign: 0+ / 5-   p=0.046
+    balanced   +0.0086 ± 0.0025   range [+0.0060, +0.0117]   p=0.002
+    per-seed gap deltas: -0.0038  -0.0201  -0.0022  -0.0203  -0.0305
+
+  demographic balancing
+    gap        -0.0154 ± 0.0189   range [-0.0437, +0.0071]   sign: 1+ / 4-   p=0.143
+    balanced   +0.0017 ± 0.0057   range [-0.0068, +0.0071]   p=0.548
+    per-seed gap deltas: +0.0071  -0.0053  -0.0437  -0.0187  -0.0163
+
+------------------------------------------------------------------------------
+  Gap itself: 0.3141 ± 0.0113
+  Largest intervention effect: 0.0154
+  That is 4.9% of the gap it would need to close.
+==============================================================================
+
+Worst group per condition, across seeds
+  no intervention        White/Female (5/5)
+  FedAR resampling       White/Female (5/5)
+  demographic balancing  White/Female (5/5)
+
+Saved to ../../results/federated_multiseed_utkface.json
+Dataset: rafdb  |  task: emotion (7 classes)
+Seeds: [42, 1, 7, 13, 99]
+
+======================================================================
+SEED 42
+======================================================================
+  none ...
+  round  25 | acc 0.6617 | bal 0.5133 | worst 0.5504 | gap 0.1843
+  round  50 | acc 0.6525 | bal 0.5182 | worst 0.5569 | gap 0.1778
+  none         bal 0.5182  gap 0.1778  worst 0.5569 (Other/Female)  [20s]
+  fedar ...
+  round  25 | acc 0.6477 | bal 0.5068 | worst 0.5588 | gap 0.1759
+  round  50 | acc 0.6428 | bal 0.5081 | worst 0.5194 | gap 0.1970
+  fedar        bal 0.5081  gap 0.1970  worst 0.5194 (Black/Male)  [52s]
+  demo_bal ...
+  round  25 | acc 0.6415 | bal 0.5078 | worst 0.5407 | gap 0.1999
+  round  50 | acc 0.6372 | bal 0.4981 | worst 0.5122 | gap 0.2042
+  demo_bal     bal 0.4981  gap 0.2042  worst 0.5122 (Other/Female)  [58s]
+
+======================================================================
+SEED 1
+======================================================================
+  none ...
+  round  25 | acc 0.6587 | bal 0.5218 | worst 0.5488 | gap 0.2063
+  round  50 | acc 0.6483 | bal 0.5128 | worst 0.5447 | gap 0.2016
+  none         bal 0.5128  gap 0.2016  worst 0.5447 (Other/Female)  [19s]
+  fedar ...
+  round  25 | acc 0.6431 | bal 0.5094 | worst 0.5271 | gap 0.1872
+  round  50 | acc 0.6454 | bal 0.5095 | worst 0.4961 | gap 0.2349
+  fedar        bal 0.5095  gap 0.2349  worst 0.4961 (Black/Male)  [49s]
+  demo_bal ...
+  round  25 | acc 0.6418 | bal 0.5088 | worst 0.4918 | gap 0.2694
+  round  50 | acc 0.6392 | bal 0.5158 | worst 0.5082 | gap 0.2381
+  demo_bal     bal 0.5158  gap 0.2381  worst 0.5082 (Indian/Male)  [59s]
+
+======================================================================
+SEED 7
+======================================================================
+  none ...
+  round  25 | acc 0.6607 | bal 0.5220 | worst 0.5410 | gap 0.1783
+  round  50 | acc 0.6565 | bal 0.5313 | worst 0.5569 | gap 0.1595
+  none         bal 0.5313  gap 0.1595  worst 0.5569 (Other/Female)  [19s]
+  fedar ...
+  round  25 | acc 0.6470 | bal 0.5120 | worst 0.5349 | gap 0.1669
+  round  50 | acc 0.6444 | bal 0.5100 | worst 0.4961 | gap 0.1998
+  fedar        bal 0.5100  gap 0.1998  worst 0.4961 (Black/Male)  [49s]
+  demo_bal ...
+  round  25 | acc 0.6437 | bal 0.5153 | worst 0.4918 | gap 0.2633
+  round  50 | acc 0.6415 | bal 0.5098 | worst 0.5082 | gap 0.1936
+  demo_bal     bal 0.5098  gap 0.1936  worst 0.5082 (Indian/Male)  [58s]
+
+======================================================================
+SEED 13
+======================================================================
+  none ...
+  round  25 | acc 0.6584 | bal 0.5198 | worst 0.5528 | gap 0.1934
+  round  50 | acc 0.6529 | bal 0.5092 | worst 0.5407 | gap 0.2056
+  none         bal 0.5092  gap 0.2056  worst 0.5407 (Other/Female)  [19s]
+  fedar ...
+  round  25 | acc 0.6574 | bal 0.5171 | worst 0.5504 | gap 0.1843
+  round  50 | acc 0.6509 | bal 0.5128 | worst 0.4918 | gap 0.2246
+  fedar        bal 0.5128  gap 0.2246  worst 0.4918 (Indian/Male)  [49s]
+  demo_bal ...
+  round  25 | acc 0.6483 | bal 0.5086 | worst 0.5504 | gap 0.1843
+  round  50 | acc 0.6431 | bal 0.5097 | worst 0.5426 | gap 0.1887
+  demo_bal     bal 0.5097  gap 0.1887  worst 0.5426 (Black/Male)  [58s]
+
+======================================================================
+SEED 99
+======================================================================
+  none ...
+  round  25 | acc 0.6620 | bal 0.5158 | worst 0.5410 | gap 0.2141
+  round  50 | acc 0.6561 | bal 0.5226 | worst 0.4884 | gap 0.2463
+  none         bal 0.5226  gap 0.2463  worst 0.4884 (Black/Male)  [20s]
+  fedar ...
+  round  25 | acc 0.6444 | bal 0.5098 | worst 0.5194 | gap 0.2765
+  round  50 | acc 0.6454 | bal 0.5090 | worst 0.5039 | gap 0.2104
+  fedar        bal 0.5090  gap 0.2104  worst 0.5039 (Black/Male)  [49s]
+  demo_bal ...
+  round  25 | acc 0.6450 | bal 0.5080 | worst 0.5271 | gap 0.2280
+  round  50 | acc 0.6405 | bal 0.5015 | worst 0.5194 | gap 0.2120
+  demo_bal     bal 0.5015  gap 0.2120  worst 0.5194 (Black/Male)  [58s]
+
+==============================================================================
+ABSOLUTE  (mean +/- std over 5 seeds)
+------------------------------------------------------------------------------
+condition                     balanced acc        subgroup gap     worst group
+no intervention             0.5188 ±0.0086       0.1982 ±0.0328     0.5375
+FedAR resampling            0.5099 ±0.0018       0.2133 ±0.0162     0.5015
+demographic balancing       0.5070 ±0.0071       0.2073 ±0.0194     0.5181
+
+==============================================================================
+PAIRED DIFFERENCE vs no intervention  (computed within each seed)
+------------------------------------------------------------------------------
+
+  FedAR resampling
+    gap        +0.0152 ± 0.0300   range [-0.0359, +0.0403]   sign: 4+ / 1-   p=0.321
+    balanced   -0.0089 ± 0.0096   range [-0.0213, +0.0036]   p=0.105
+    per-seed gap deltas: +0.0193  +0.0333  +0.0403  +0.0190  -0.0359
+
+  demographic balancing
+    gap        +0.0091 ± 0.0326   range [-0.0344, +0.0365]   sign: 3+ / 2-   p=0.564
+    balanced   -0.0118 ± 0.0124   range [-0.0215, +0.0030]   p=0.100
+    per-seed gap deltas: +0.0264  +0.0365  +0.0341  -0.0169  -0.0344
+
+------------------------------------------------------------------------------
+  Gap itself: 0.1982 ± 0.0328
+  Largest intervention effect: 0.0152
+  That is 7.7% of the gap it would need to close.
+==============================================================================
+
+Worst group per condition, across seeds
+  no intervention        Other/Female (4/5), Black/Male (1/5)
+  FedAR resampling       Black/Male (4/5), Indian/Male (1/5)
+  demographic balancing  Indian/Male (2/5), Black/Male (2/5), Other/Female (1/5)
+
+Saved to ../../results/federated_multiseed_rafdb.json

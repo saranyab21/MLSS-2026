@@ -1,0 +1,231 @@
+{
+  "args": {
+    "latents": "../../latents/utkface_latents.npz",
+    "output": "../../results/federated_multiseed_utkface.json",
+    "seeds": "42,1,7,13,99",
+    "task": null,
+    "n_clients": 10,
+    "rounds": 50,
+    "local_epochs": 2,
+    "batch_size": 64,
+    "lr": 0.001,
+    "imr_threshold": 1.8,
+    "skew": "0.05,1.0,0.5,0.15",
+    "eval_every": 25
+  },
+  "task": "age_bucket",
+  "dataset": "unknown",
+  "seeds": [
+    42,
+    1,
+    7,
+    13,
+    99
+  ],
+  "per_seed": {
+    "42": {
+      "none": {
+        "overall_acc": 0.5606412149335583,
+        "balanced_acc": 0.4657498837651196,
+        "worst_group": 0.466955579631636,
+        "best_group": 0.7753424657534247,
+        "gap": 0.3083868861217887,
+        "worst_group_name": "White/Female"
+      },
+      "fedar": {
+        "overall_acc": 0.5587428812486818,
+        "balanced_acc": 0.47744746059484006,
+        "worst_group": 0.46803900325027087,
+        "best_group": 0.7726027397260274,
+        "gap": 0.3045637364757566,
+        "worst_group_name": "White/Female"
+      },
+      "demo_bal": {
+        "overall_acc": 0.560430288968572,
+        "balanced_acc": 0.46423868527242385,
+        "worst_group": 0.46803900325027087,
+        "best_group": 0.7835616438356164,
+        "gap": 0.31552264058534557,
+        "worst_group_name": "White/Female"
+      }
+    },
+    "1": {
+      "none": {
+        "overall_acc": 0.5701328833579413,
+        "balanced_acc": 0.47622869608463586,
+        "worst_group": 0.466955579631636,
+        "best_group": 0.8,
+        "gap": 0.33304442036836407,
+        "worst_group_name": "White/Female"
+      },
+      "fedar": {
+        "overall_acc": 0.5695001054629825,
+        "balanced_acc": 0.4822512714945356,
+        "worst_group": 0.4788732394366197,
+        "best_group": 0.7917808219178082,
+        "gap": 0.3129075824811885,
+        "worst_group_name": "White/Female"
+      },
+      "demo_bal": {
+        "overall_acc": 0.5762497363425437,
+        "balanced_acc": 0.48327938788401853,
+        "worst_group": 0.48320693391115926,
+        "best_group": 0.810958904109589,
+        "gap": 0.3277519701984298,
+        "worst_group_name": "White/Female"
+      }
+    },
+    "7": {
+      "none": {
+        "overall_acc": 0.5713984391478591,
+        "balanced_acc": 0.47686264979192133,
+        "worst_group": 0.48429035752979416,
+        "best_group": 0.8,
+        "gap": 0.3157096424702059,
+        "worst_group_name": "White/Female"
+      },
+      "fedar": {
+        "overall_acc": 0.5676017717781059,
+        "balanced_acc": 0.4828771487325806,
+        "worst_group": 0.4810400866738895,
+        "best_group": 0.7945205479452054,
+        "gap": 0.31348046127131596,
+        "worst_group_name": "White/Female"
+      },
+      "demo_bal": {
+        "overall_acc": 0.5737186247627083,
+        "balanced_acc": 0.4819149863484967,
+        "worst_group": 0.49512459371614304,
+        "best_group": 0.7671232876712328,
+        "gap": 0.2719986939550898,
+        "worst_group_name": "White/Female"
+      }
+    },
+    "13": {
+      "none": {
+        "overall_acc": 0.5652815861632567,
+        "balanced_acc": 0.4670335415245413,
+        "worst_group": 0.47778981581798485,
+        "best_group": 0.7863013698630137,
+        "gap": 0.30851155404502884,
+        "worst_group_name": "White/Female"
+      },
+      "fedar": {
+        "overall_acc": 0.5638051044083526,
+        "balanced_acc": 0.4773362562247276,
+        "worst_group": 0.4788732394366197,
+        "best_group": 0.7671232876712328,
+        "gap": 0.28825004823461314,
+        "worst_group_name": "White/Female"
+      },
+      "demo_bal": {
+        "overall_acc": 0.5574773254587639,
+        "balanced_acc": 0.4602492733611041,
+        "worst_group": 0.4745395449620802,
+        "best_group": 0.7643835616438356,
+        "gap": 0.2898440166817554,
+        "worst_group_name": "White/Female"
+      }
+    },
+    "99": {
+      "none": {
+        "overall_acc": 0.5517823244041341,
+        "balanced_acc": 0.45463417369411213,
+        "worst_group": 0.4593716143011918,
+        "best_group": 0.7643835616438356,
+        "gap": 0.3050119473426438,
+        "worst_group_name": "White/Female"
+      },
+      "fedar": {
+        "overall_acc": 0.5538915840539971,
+        "balanced_acc": 0.463555501375559,
+        "worst_group": 0.4734561213434453,
+        "best_group": 0.7479452054794521,
+        "gap": 0.2744890841360068,
+        "worst_group_name": "White/Female"
+      },
+      "demo_bal": {
+        "overall_acc": 0.5597975110736132,
+        "balanced_acc": 0.45919325681382794,
+        "worst_group": 0.47562296858071507,
+        "best_group": 0.7643835616438356,
+        "gap": 0.2887605930631205,
+        "worst_group_name": "White/Female"
+      }
+    }
+  },
+  "deltas": {
+    "fedar": {
+      "gap": {
+        "mean": -0.015394707549830067,
+        "std": 0.012065101071276183,
+        "min": -0.030522863206636996,
+        "max": -0.002229181198889929,
+        "n_positive": 0,
+        "n_negative": 5,
+        "values": [
+          -0.0038231496460321424,
+          -0.020136837887175574,
+          -0.002229181198889929,
+          -0.020261505810415692,
+          -0.030522863206636996
+        ],
+        "t": -2.8531557565732113,
+        "p": 0.04624805153848103
+      },
+      "balanced_acc": {
+        "mean": 0.008591738712382524,
+        "std": 0.0025458330191832856,
+        "min": 0.006014498940659252,
+        "max": 0.011697576829720446,
+        "n_positive": 5,
+        "n_negative": 0,
+        "values": [
+          0.011697576829720446,
+          0.006022575409899755,
+          0.006014498940659252,
+          0.010302714700186288,
+          0.008921327681446878
+        ],
+        "t": 7.546336174069673,
+        "p": 0.0016519668029037573
+      }
+    },
+    "demo_bal": {
+      "gap": {
+        "mean": -0.015357307172858048,
+        "std": 0.018860839653742495,
+        "min": -0.04371094851511609,
+        "max": 0.007135754463556854,
+        "n_positive": 1,
+        "n_negative": 4,
+        "values": [
+          0.007135754463556854,
+          -0.005292450169934293,
+          -0.04371094851511609,
+          -0.018667537363273423,
+          -0.01625135427952329
+        ],
+        "t": -1.8207027587471025,
+        "p": 0.1427605021225139
+      },
+      "balanced_acc": {
+        "mean": 0.0016733289639081828,
+        "std": 0.005708184140200606,
+        "min": -0.00678426816343719,
+        "max": 0.007050691799382669,
+        "n_positive": 3,
+        "n_negative": 2,
+        "values": [
+          -0.0015111984926957645,
+          0.007050691799382669,
+          0.0050523365565753875,
+          -0.00678426816343719,
+          0.004559083119715812
+        ],
+        "t": 0.6554934494258436,
+        "p": 0.5479360795382631
+      }
+    }
+  }
+}
