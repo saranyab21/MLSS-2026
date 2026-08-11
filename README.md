@@ -20,37 +20,67 @@ then applied to those vectors on the client side to correct class imbalance.
 
 I designed the VAE encoder for that paper. It was trained with reconstruction and
 KL loss alone — no demographic supervision, no fairness constraint, no
-disentanglement term. Nobody checked what else it encoded.
+disentanglement term. The paper included a privacy check: reconstructing latents
+through an external decoder gave similarity 0.06, so the raw images were safe.
 
-This project asks three questions:
+**That check answers "can you invert the latent?" It does not answer "can you read
+attributes off the latent?"** Those are different properties, and only the first
+was measured.
 
-1. **Does the latent space encode demographic identity?** (Experiment A)
-2. **Does that leakage matter for the downstream task?** (Experiment B)
-3. **Can it be removed?** (Experiments C and D)
+This project asks three questions, on two corpora:
 
-Every question is answered on two corpora that differ in almost every way that
-could confound the result.
+1. **Are demographic attributes recoverable from the latent?** (Experiment A)
+2. **Does that matter for the downstream task?** (Experiment B)
+3. **Can the information be removed?** (Experiments C and D)
+
+Plus two controls that could have invalidated the framing, one of which did.
+
+---
+
+## Headline result
+
+Attributes are recoverable from the frozen latent at close to task-level
+fidelity. On RAF-DB, AUROC:
+
+| target | AUROC |
+|---|---|
+| emotion — *the task the encoder was built for* | 0.857 |
+| gender | 0.835 |
+| race | 0.826 |
+| age | 0.813 |
+
+**But the encoder is not responsible.** A PCA projection of downsampled pixels to
+the same 128 dimensions retains as much or slightly more. So the finding is
+**preservation, not learning**: compressing to a low-dimensional latent removes
+essentially none of what was already linearly present in the pixels. The
+representation step is not a sanitisation step.
+
+And no intervention we tested reaches the resulting subgroup disparity — not
+task-label resampling, not demographic balancing, not adversarial removal at any
+adversarial strength.
 
 ---
 
 ## The honest framing
 
-Two caveats belong in front of the results, not buried at the end.
+Two caveats belong in front of the results.
 
 **RAF-DB's human demographic annotations were not available.** The official
 release carries per-image race, age and gender labels, but access was requested
 from BUPT and not granted in time. The public Kaggle mirrors redistribute only
 the emotion labels. Demographics for RAF-DB are therefore **inferred with the
-FairFace classifier** (Kärkkäinen & Joo, WACV 2021) — the same protocol used by
-the published fairness-in-FER studies this work compares against. They are model
+FairFace classifier** (Kärkkäinen & Joo, WACV 2021) — the protocol used by the
+published fairness-in-FER studies this work compares against. They are model
 predictions, not ground truth, and they carry FairFace's own error and bias.
+Because label noise biases probe accuracy downward, the RAF-DB demographic
+numbers are **lower bounds**.
 
 **UTKFace has no emotion labels.** Its downstream task is age-bucket
-classification, which stands in for emotion structurally (an imbalanced
-multi-class problem over the same frozen latents) but is not the same task.
+classification, which stands in for emotion structurally — an imbalanced
+multi-class problem over the same frozen latents — but is not the same task.
 
-The two datasets therefore answer complementary questions rather than the same
-question twice:
+The two datasets answer complementary questions rather than the same question
+twice:
 
 | | UTKFace | RAF-DB |
 |---|---|---|
@@ -59,7 +89,7 @@ question twice:
 | emotion labels | none | human-annotated, 7 classes |
 | downstream task | age bucket (4 classes) | emotion (7 classes) |
 | task imbalance | 2.1 native, 41.5 induced | **17.0 native** |
-| answers | *what does the representation encode?* | *does it matter for the task FedAR was built for?* |
+| answers | *what does the representation retain?* | *does it matter for the task FedAR was built for?* |
 
 RAF-DB's native imbalance ratio of 17.0 is close to the AffectNet setting FedAR
 was designed for (18.7), so the resampling intervention engages without any
@@ -69,7 +99,7 @@ artificial skewing.
 
 ## Results
 
-### Experiment A — demographic leakage
+### Experiment A — attribute recoverability
 
 Three probe families (logistic regression, linear SVM, one-hidden-layer MLP)
 predicting each attribute from the **frozen** latent. Best probe reported;
@@ -86,51 +116,76 @@ Logistic regression alone lands within 1–3 points of the MLP on every target, 
 the information is **linearly decodable** — any downstream linear classifier
 inherits it for free.
 
-The RAF-DB numbers are **lower bounds**. The encoder is weaker (half the training
-data) and the demographic targets are noisy pseudo-labels; a probe predicting a
-noisy target underestimates the underlying signal.
-
-**The headline, on RAF-DB:**
-
-| target | AUROC |
-|---|---|
-| emotion — *the task* | 0.857 |
-| gender | 0.835 |
-| race | 0.826 |
-| age | 0.813 |
-
-The encoder separates race almost as well as it separates the emotion it was
-built to represent, out of the same 128 dimensions.
-
 **Controls.** Every target is reported against a stratified dummy, a
 majority-class dummy, and a **label-shuffled null** — the same probe trained and
 tested on permuted labels, which must land at chance. It does, on all seven
 target/dataset pairs. Cross-validated standard deviations are 0.003–0.014.
 
-### Experiment B — does it matter downstream?
+### Control 1 — is the encoder responsible? (No)
+
+A PCA projection of downsampled pixels to exactly the latent's dimensionality,
+fitted on the train split only, run through the identical probe suite.
+
+| | VAE latent | best PCA-128 | difference |
+|---|---|---|---|
+| UTKFace gender | +0.369 | +0.377 | −0.008 |
+| UTKFace race | +0.419 | +0.422 | −0.003 |
+| UTKFace age | +0.352 | +0.360 | −0.008 |
+| RAF-DB gender | +0.253 | +0.282 | −0.029 |
+| RAF-DB race | +0.239 | +0.263 | −0.024 |
+| RAF-DB age | +0.265 | +0.265 | 0.000 |
+
+Mean VAE advantage on demographic targets: **−0.006** (UTKFace), **−0.018**
+(RAF-DB).
+
+The VAE gives no advantage on the *task* either — RAF-DB emotion: VAE +0.354,
+PCA-RGB +0.350, raw 16×16 grayscale **+0.390**. At β=1 on this data scale the
+encoder behaves like a nonlinear PCA as far as any downstream probe can tell,
+which is the empirical echo of Lucas et al. (NeurIPS 2019) showing that linear
+VAEs recover the pPCA solution exactly.
+
+**This control changed the framing.** The claim is preservation, not learning.
+
+### Experiment B — does it matter downstream? (five seeds)
 
 FedAvg simulated on the cached latents. Ten clients, fifty rounds, three
-conditions. Race and gender are held out as sensitive attributes and never seen
-by any model.
+conditions, seeds 42/1/7/13/99. Race and gender are held out as sensitive
+attributes and never seen by any model.
+
+Absolute, mean ± std over seeds:
 
 | | UTKFace (age, IMR 41.5) | | RAF-DB (emotion, IMR 17.0) | |
 |---|---|---|---|---|
-| condition | balanced acc | subgroup gap | balanced acc | subgroup gap |
-| no intervention | 0.4657 | 0.3084 | 0.5182 | 0.1778 |
-| FedAR resampling | 0.4774 | 0.3046 | 0.5081 | 0.1970 |
-| demographic balancing | 0.4642 | 0.3155 | 0.4981 | 0.2042 |
+| condition | balanced acc | gap | balanced acc | gap |
+| no intervention | 0.4681 ± 0.0091 | 0.3141 ± 0.0113 | 0.5188 ± 0.0086 | 0.1982 ± 0.0328 |
+| FedAR resampling | 0.4767 ± 0.0078 | 0.2987 ± 0.0170 | 0.5099 ± 0.0018 | 0.2133 ± 0.0162 |
+| demographic balancing | 0.4698 ± 0.0119 | 0.2988 ± 0.0225 | 0.5070 ± 0.0071 | 0.2073 ± 0.0194 |
 
-Change in gap relative to no intervention: **−0.0038** and **+0.0071** on
-UTKFace, **+0.0193** and **+0.0264** on RAF-DB. Negligible, and inconsistent in
-sign — there is no mechanism by which either intervention reaches the disparity.
+Paired within-seed differences against no intervention:
+
+| | UTKFace Δgap | UTKFace Δbalanced | RAF-DB Δgap | RAF-DB Δbalanced |
+|---|---|---|---|---|
+| FedAR | **−0.0154 ± 0.0121**, 5/5 negative | **+0.0086 ± 0.0025**, 5/5 positive | +0.0152 ± 0.0300, p=0.32 | −0.0089 ± 0.0096 |
+| demographic balancing | −0.0154 ± 0.0189, 4/5 negative | +0.0017 ± 0.0057 | +0.0091 ± 0.0326, p=0.56 | −0.0118 ± 0.0124 |
+
+**FedAR resampling does what it was designed to do.** On UTKFace it improved
+balanced accuracy in every seed. But the largest effect on the demographic
+subgroup gap is **4.9% of that gap's own magnitude** (UTKFace) and **7.7%**
+(RAF-DB), with no detectable effect on RAF-DB at all.
 
 Demographic balancing is the decisive control: balancing the *sensitive*
 attribute directly, rather than the task labels, does not close the gap either.
 
-On RAF-DB the worst-off subgroup **moves** between conditions — Other/Female,
-then Black/Male, then Other/Female — so the interventions relocate who absorbs
-the disparity rather than reducing it. On UTKFace it stays White/Female
-throughout, so this is a RAF-DB observation, not a general finding.
+**A methodological note.** RAF-DB gap variance from seed alone is ±0.0328 on a
+gap of 0.1982 — 17% relative. A single-seed run of this experiment reported a
++0.0193 gap widening on RAF-DB that five seeds show to be noise. Single-seed
+federated fairness results at this scale are unreliable.
+
+**Worst-group behaviour.** UTKFace: White/Female in 15/15 runs. RAF-DB:
+Other/Female 4/5 under no intervention → Black/Male 4/5 under FedAR →
+Indian/Male 2/5, Black/Male 2/5, Other/Female 1/5 under demographic balancing. So
+the interventions relocate who absorbs the disparity on RAF-DB, modally rather
+than universally, and not at all on UTKFace.
 
 ### Experiments C and D — can it be removed?
 
@@ -142,22 +197,23 @@ initialised probe: the adversary was defeated, the information was not.
 
 Above-chance signal removed, measured on the deterministic linear probe:
 
-| λ | UTKFace gender / race / age | RAF-DB gender / race / age |
-|---|---|---|
-| 1 | 0.1% / 4.6% / 2.4% | 3.9% / 8.2% / 4.5% |
-| 5 | 5.6% / 11.7% / 9.3% | 6.6% / **18.2%** / 8.0% |
-| 20 | 15.3% / **21.3%** / 10.7% | 18.0% / 2.7% / 13.5% |
-| 50 | 6.7% / 14.3% / 6.0% | 12.3% / **−1.7%** / **−6.6%** |
+| λ | UTKFace gender / race / age | RAF-DB gender / race / age | RAF-DB emotion (task) |
+|---|---|---|---|
+| 1 | 0.1% / 4.6% / 2.4% | 3.9% / 8.2% / 4.5% | 1.1% |
+| 5 | 5.6% / 11.7% / 9.3% | 6.6% / **18.2%** / 8.0% | 2.5% |
+| 20 | 15.3% / **21.3%** / 10.7% | 18.0% / 2.7% / 13.5% | 1.1% |
+| 50 | 6.7% / 14.3% / 6.0% | 12.3% / **−1.7%** / **−6.6%** | 2.4% |
 
 Removal peaks around 20% and then declines. At λ=50 on RAF-DB, race and age
-became **more** linearly recoverable than before debiasing, while reconstruction
+became *more* linearly recoverable than before debiasing, while reconstruction
 loss rose by 17.6. Full utility cost, negative invariance benefit.
 
-The RAF-DB runs additionally track **emotion accuracy** as the utility axis.
-It moves by 1.1–2.5% across every λ. So this is not a case of adversarial
-pressure destroying the representation wholesale: the task signal survives and
-the demographic signal survives. The intervention simply does not reach what it
-is aimed at.
+The RAF-DB runs track **emotion accuracy** as the utility axis. It moves by
+1.1–2.5% across every λ. So this is not adversarial pressure destroying the
+representation wholesale: the task signal survives and the demographic signal
+survives. The intervention does not reach what it is aimed at.
+
+This sweep is **single-seed** and should be read accordingly.
 
 ---
 
@@ -181,11 +237,12 @@ is aimed at.
                         extract_latents.py
                      frozen encoder → cached μ
                                   │
-        ┌────────────────┬────────┴────────┬─────────────────┐
-        ▼                ▼                 ▼                 ▼
-    probes.py      federated.py       debias.py      visualize.py
-    (Exp. A)         (Exp. B)        (Exp. C + D)    tradeoff_figure.py
-                                                     cross_dataset.py
+     ┌──────────┬──────────┬──────┴──────┬────────────────┬──────────────┐
+     ▼          ▼          ▼             ▼                ▼              ▼
+ probes.py  federated  federated_    debias.py     pixel_baseline   visualize.py
+ (Exp. A)     .py      multiseed.py  (Exp. C+D)    .py (control)    tradeoff_figure.py
+            (Exp. B)   (control)                                    cross_dataset.py
+                                                                    control_figures.py
 ```
 
 Everything after `extract_latents.py` runs on cached 128-dimensional vectors, so
@@ -218,8 +275,10 @@ All scripts live in `code/src/` and are run from that directory.
 | file | what it does |
 |---|---|
 | `probes.py` | Experiment A. Three probe families × all targets, with stratified/majority/shuffled-null controls and 5-fold CV. |
-| `federated.py` | Experiment B. FedAvg simulation, three conditions, subgroup breakdown by race × gender. |
+| `federated.py` | Experiment B, single seed. FedAvg simulation, three conditions, subgroup breakdown by race × gender. |
+| `federated_multiseed.py` | Experiment B across seeds, with paired within-seed differences. **This is the version to cite.** |
 | `debias.py` | Experiments C and D. GRL adversarial removal with the fresh-probe recovery check. |
+| `pixel_baseline.py` | The control that changed the framing. Runs the identical probe suite on raw pixels and on dimension-matched PCA. |
 
 **Figures**
 
@@ -227,7 +286,8 @@ All scripts live in `code/src/` and are run from that directory.
 |---|---|
 | `visualize.py` | Per-dataset: probe performance, composition, LDA projection, UMAP. |
 | `tradeoff_figure.py` | Per-dataset: removal against λ and against utility cost. |
-| `cross_dataset.py` | Both datasets together. Produces the poster's headline panels. |
+| `cross_dataset.py` | Both datasets together. Leakage, task-vs-demographic AUROC, federated conditions, worst group, removal ceiling. |
+| `control_figures.py` | The two control figures: PCA comparison and per-seed paired differences. |
 
 ---
 
@@ -238,7 +298,7 @@ All scripts live in `code/src/` and are run from that directory.
 ```bash
 python3 -m venv venv && source venv/bin/activate
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
-pip install scikit-learn pandas numpy matplotlib seaborn tqdm imbalanced-learn
+pip install scikit-learn pandas numpy matplotlib seaborn tqdm imbalanced-learn scipy
 pip install umap-learn        # optional; segfaults if TensorFlow is present
 ```
 
@@ -246,7 +306,7 @@ Built and run on a single NVIDIA RTX 2080 (8 GB) on the FAU CIP Pool.
 
 ### Data
 
-**UTKFace** — aligned-and-cropped, 23,708 images, filenames encode the labels.
+**UTKFace** — aligned-and-cropped, filenames encode the labels.
 
 ```bash
 kaggle datasets download -d jangedoo/utkface-new
@@ -278,6 +338,10 @@ python extract_latents.py --data_root ../../data/utkface
 python probes.py
 python federated.py --skew 0.05,1.0,0.5,0.15 \
     --output ../../results/federated_skewed.json
+python federated_multiseed.py --skew 0.05,1.0,0.5,0.15 \
+    --output ../../results/federated_multiseed_utkface.json
+python pixel_baseline.py --data_root ../../data/utkface \
+    --output ../../results/pixel_baseline_utkface.json
 for lam in 1 5 20 50; do
   out=../../results/debias_lam${lam}.json
   [ $lam -eq 1 ] && out=../../results/debias_results.json
@@ -307,6 +371,13 @@ python probes.py --latents ../../latents/rafdb_latents.npz \
     --output ../../results/probe_results_rafdb.json
 python federated.py --latents ../../latents/rafdb_latents.npz \
     --output ../../results/federated_rafdb.json
+python federated_multiseed.py --latents ../../latents/rafdb_latents.npz \
+    --output ../../results/federated_multiseed_rafdb.json
+python pixel_baseline.py --dataset rafdb \
+    --data_root ../../data/rafdb_raw \
+    --demographics ../../data/rafdb_demographics.csv \
+    --latents ../../latents/rafdb_latents.npz \
+    --output ../../results/pixel_baseline_rafdb.json
 for lam in 1 5 20 50; do
   python debias.py --dataset rafdb \
     --data_root ../../data/rafdb_raw \
@@ -326,10 +397,11 @@ python visualize.py --results ../../results/probe_results_rafdb.json \
 python tradeoff_figure.py --dataset utkface
 python tradeoff_figure.py --dataset rafdb --suffix _rafdb
 python cross_dataset.py
+python control_figures.py
 ```
 
-End to end on one RTX 2080: roughly 90 minutes, dominated by the eight debias
-runs.
+End to end on one RTX 2080: roughly two hours, dominated by the eight debias runs
+and the two multi-seed federated sweeps.
 
 ---
 
@@ -348,6 +420,13 @@ ordinary training on top of the pretrained VAE, which changes reconstruction on
 its own. Anchoring to the weakest adversarial setting isolates the cost
 attributable to adversarial pressure.
 
+**Why paired within-seed differences.** The baseline gap itself varies with the
+client partition, which is seed-dependent. Computing `gap(intervention) −
+gap(none)` within each seed before averaging removes that shared variance.
+
+**Why sign consistency over p-values.** With five seeds, significance is
+fragile. "Negative in all five seeds" is the more robust statement.
+
 **Why RAF-DB's native split is reused.** The dataset ships a train/test
 partition; drawing a new one would break comparability with published RAF-DB
 results. The VAE trains only on the train split, so test images are never seen.
@@ -365,6 +444,13 @@ projection is the illustration.
 - **RAF-DB demographics are model-inferred.** FairFace mean race confidence is
   79.3% and the inferred composition matches RAF-DB's published skew, but these
   are predictions. All RAF-DB demographic results should be read as lower bounds.
+- **The debias sweep is single-seed.** The negative removal at λ=50 in
+  particular could be noise. The federated experiment was repeated across five
+  seeds; this one was not.
+- **PCA was fitted on 32×32 RGB and 16×16 grayscale, not the 96×96 the VAE saw.**
+  A PCA on the full input would likely retain more, which would strengthen rather
+  than weaken the conclusion, so the control is conservative in the direction
+  that counts against it.
 - **Neither dataset provides subject identifiers**, so subject-disjoint probe
   splits cannot be guaranteed. Both are composed largely of distinct individuals.
 - **Race categories are coarse and socially constructed.** UTKFace uses five;
@@ -373,9 +459,8 @@ projection is the illustration.
   labels are preserved in the CSV.
 - **UTKFace's task is not emotion.** Age-bucket classification is a structural
   stand-in.
-- **One architecture, one latent dimension, one seed per configuration.** The
-  findings are about a standard reconstruction+KL VAE at 128 dimensions, not
-  about VAEs in general.
+- **One architecture, one latent dimension, one β.** The findings concern a
+  standard reconstruction+KL VAE at 128 dimensions, not VAEs in general.
 
 ---
 
@@ -399,6 +484,12 @@ Ganin & Lempitsky. Unsupervised Domain Adaptation by Backpropagation. *ICML*,
 
 Elazar & Goldberg. Adversarial Removal of Demographic Attributes from Text Data.
 *EMNLP*, 2018. (The fresh-probe check)
+
+Lucas, Tucker, Grosse & Norouzi. Don't Blame the ELBO! A Linear VAE Perspective
+on Posterior Collapse. *NeurIPS*, 2019. (Why the PCA control comes out level)
+
+Locatello et al. Challenging Common Assumptions in the Unsupervised Learning of
+Disentangled Representations. *ICML*, 2019.
 
 Xu, White, Kalkan & Gunes. Investigating Bias and Fairness in Facial Expression
 Recognition. *ECCV Workshops*, 2020.
