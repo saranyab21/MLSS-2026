@@ -1,0 +1,10 @@
+{
+  "dataset": "rafdb",
+  "n_test_batches": 24,
+  "decoder": "own (trained jointly with encoder) \u2014 NOT FedAR's external decoder",
+  "pixel_mse": 0.007761671460078408,
+  "pixel_l1": 0.06115350251396497,
+  "ssim": 0.8749828065435091,
+  "cosine_pixel": 0.9842131460706393,
+  "note": "Reconstruction fidelity of our own decoder. Not comparable to FedAR's 0.06, which used an external decoder (a different threat model)."
+}

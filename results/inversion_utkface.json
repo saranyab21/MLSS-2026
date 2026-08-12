@@ -1,0 +1,10 @@
+{
+  "dataset": "utkface",
+  "n_test_batches": 38,
+  "decoder": "own (trained jointly with encoder) \u2014 NOT FedAR's external decoder",
+  "pixel_mse": 0.005686970047750755,
+  "pixel_l1": 0.053126580032863115,
+  "ssim": 0.9112216610657541,
+  "cosine_pixel": 0.98888361924573,
+  "note": "Reconstruction fidelity of our own decoder. Not comparable to FedAR's 0.06, which used an external decoder (a different threat model)."
+}
