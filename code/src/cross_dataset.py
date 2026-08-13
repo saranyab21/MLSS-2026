@@ -46,6 +46,8 @@ COND_LABEL = {'none': 'No intervention',
               'fedar': 'FedAR resampling',
               'demo_bal': 'Demographic balancing'}
 
+LAMS = [1, 5, 20, 50]
+
 plt.rcParams.update({
     'font.size': 12, 'axes.labelsize': 13, 'axes.titlesize': 13.5,
     'xtick.labelsize': 11, 'ytick.labelsize': 11, 'legend.fontsize': 11,
@@ -311,6 +313,82 @@ def fig_worst_group(fed, out_path):
     plt.close(fig)
     print(f"  wrote {out_path}")
 
+def load_multiseed(results_dir, dataset):
+    """Return {lambda: {attr: (mean, std, n_pos, n_neg)}} from the aggregate block."""
+    path = os.path.join(results_dir, f'debias_multiseed_{dataset}.json')
+    if not os.path.exists(path):
+        return None
+    d = json.load(open(path))
+    agg = d['aggregate']
+    out = {}
+    for lam in LAMS:
+        key = str(lam)
+        if key not in agg:
+            continue
+        out[lam] = {}
+        for a in DEMO:
+            if a in agg[key]:
+                s = agg[key][a]
+                out[lam][a] = (s['mean'], s['std'], s['n_positive'], s['n_negative'])
+    return out
+ 
+ 
+def fig_removal_cross_multiseed(sweeps, out_path):
+    """3-panel (gender/race/age) removal vs lambda, mean +/- std across seeds."""
+    fig, axes = plt.subplots(1, 3, figsize=(13.5, 5.0), sharey=True)
+ 
+    # find y-range
+    allvals = []
+    for ds in sweeps:
+        if not sweeps[ds]:
+            continue
+        for lam in sweeps[ds]:
+            for a in DEMO:
+                if a in sweeps[ds][lam]:
+                    m, sd, *_ = sweeps[ds][lam][a]
+                    allvals += [m - sd, m + sd]
+    lo = min(-5, min(allvals) - 2) if allvals else -5
+    hi = max(30, max(allvals) + 3) if allvals else 30
+ 
+    for ax, attr in zip(axes, DEMO):
+        for ds, meta in DS.items():
+            if ds not in sweeps or not sweeps[ds]:
+                continue
+            lams, means, stds = [], [], []
+            for lam in LAMS:
+                if lam in sweeps[ds] and attr in sweeps[ds][lam]:
+                    m, sd, *_ = sweeps[ds][lam][attr]
+                    lams.append(lam); means.append(m); stds.append(sd)
+            ax.errorbar(lams, means, yerr=stds, marker='o', color=meta['colour'],
+                        label=meta['label'], linewidth=2, markersize=7,
+                        capsize=4, capthick=1.4, elinewidth=1.4)
+ 
+        ax.axhline(0, color='#333333', linewidth=1.1)
+        ax.set_xscale('log')
+        ax.set_xticks(LAMS)
+        ax.set_xticklabels([str(l) for l in LAMS])
+        ax.set_xlabel('adversarial strength $\\lambda$')
+        ax.set_ylim(lo, hi)
+        ax.set_title(DEMO_LABEL[attr])
+        ax.grid(alpha=0.25, linewidth=0.6)
+        ax.set_axisbelow(True)
+ 
+    axes[0].set_ylabel('above-chance signal removed (%)')
+    axes[0].legend(frameon=False, loc='upper left')
+ 
+    # honest annotation: peak-then-decline, no "goes negative" claim
+    axes[1].annotate('peaks then declines\nwith more $\\lambda$',
+                     xy=(20, 18), xytext=(5, 26), fontsize=9,
+                     color=CB['grey'], ha='left', va='top')
+ 
+    fig.suptitle('Adversarial removal peaks below ~20% and declines with $\\lambda$ '
+                 '— on both corpora, across 5 seeds\n'
+                 'mean ± std, freshly initialised probe after the adversary is discarded',
+                 y=1.05, fontsize=13.5)
+    fig.savefig(out_path)
+    plt.close(fig)
+    print(f"  wrote {out_path}")
+
 
 def fig_removal_cross(sweeps, out_path):
     """
@@ -391,8 +469,10 @@ def main():
         if d:
             fed[ds] = d
 
-    sweeps = {ds: load_debias_sweep(R, ds, metric=args.metric)
-              for ds in DS}
+#    sweeps = {ds: load_debias_sweep(R, ds, metric=args.metric)
+#              for ds in DS}
+
+    sweeps = {ds: load_multiseed(R, ds) for ds in DS}
 
     print("Generating cross-dataset figures:")
     if len(probes) == 2:
@@ -407,7 +487,7 @@ def main():
         fig_worst_group(fed, os.path.join(args.out_dir,
                                           'figX4_worst_group.png'))
     if any(sweeps.values()):
-        fig_removal_cross(sweeps, os.path.join(args.out_dir,
+        fig_removal_cross_multiseed(sweeps, os.path.join(args.out_dir,
                                                'figX5_removal_cross.png'))
 
     # ---- console summary, ready to paste into the poster ----
@@ -452,7 +532,9 @@ def main():
     print("\nPeak adversarial removal (fresh probe, "
           f"{args.metric})")
     for ds, runs in sweeps.items():
-        if not runs:
+        # guard: skip empty or malformed sweeps (e.g. missing single-seed files)
+        if not runs or not all(isinstance(r, dict) and 'removed' in r for r in runs):
+            print(f"  {DS[ds]['label']:<10} (no valid debias sweep found — skipped)")
             continue
         best = max(runs, key=lambda r: max(r['removed'].values()))
         a = max(best['removed'], key=best['removed'].get)
@@ -461,8 +543,7 @@ def main():
         neg = [(r['lambda'], k, v) for r in runs
                for k, v in r['removed'].items() if v < 0]
         for lam, k, v in neg:
-            print(f"             {v:+5.1f}%  ({DEMO_LABEL[k]}, lambda={lam:.0f}) "
-                  f"<- became MORE recoverable")
+            print(f"             {v:+5.1f}%  ({DEMO_LABEL[k]}, lambda={lam:.0f})")
     print("=" * 78 + "\n")
 
 

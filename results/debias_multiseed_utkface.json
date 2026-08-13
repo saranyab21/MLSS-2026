@@ -1,0 +1,1314 @@
+{
+  "args": {
+    "data_root": "../../data/utkface",
+    "dataset": "utkface",
+    "demographics": null,
+    "checkpoint": "../../checkpoints/vae_best.pt",
+    "reference_latents": "../../latents/utkface_latents.npz",
+    "output": "../../results/debias_multiseed_utkface.json",
+    "seeds": "42,1,7,13,99",
+    "lambdas": "1,5,20,50",
+    "epochs": 20,
+    "batch_size": 128,
+    "lr": 0.0001,
+    "adv_lr": 0.001,
+    "beta": 1.0,
+    "num_workers": 4
+  },
+  "dataset": "utkface",
+  "seeds": [
+    42,
+    1,
+    7,
+    13,
+    99
+  ],
+  "lambdas": [
+    1.0,
+    5.0,
+    20.0,
+    50.0
+  ],
+  "headline_probe": "LogReg",
+  "eval_targets": [
+    "gender",
+    "race",
+    "age_bucket"
+  ],
+  "runs": [
+    {
+      "seed": 42,
+      "lambda_max": 1.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.8551393942939536,
+            "after": 0.8592864605981436,
+            "pct_removed": -1.1677291708048185,
+            "residual_above_chance": 0.3592864605981436
+          },
+          "MLP": {
+            "before": 0.8689923187150034,
+            "after": 0.8759786209644538,
+            "pct_removed": -1.8933462554938378,
+            "residual_above_chance": 0.3759786209644538
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.5966249052499499,
+            "after": 0.5860613119805117,
+            "pct_removed": 2.663371142258739,
+            "residual_above_chance": 0.3860613119805117
+          },
+          "MLP": {
+            "before": 0.6189655256469645,
+            "after": 0.6171395239449716,
+            "pct_removed": 0.4358357884394358,
+            "residual_above_chance": 0.4171395239449716
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.5993670635535028,
+            "after": 0.5867675020854344,
+            "pct_removed": 3.6063964759342224,
+            "residual_above_chance": 0.3367675020854344
+          },
+          "MLP": {
+            "before": 0.6016357334249663,
+            "after": 0.5903983661645602,
+            "pct_removed": 3.1957409876843537,
+            "residual_above_chance": 0.3403983661645602
+          }
+        }
+      },
+      "final_lambda": 0.9999092042625952,
+      "final_recon": 167.5052349935442
+    },
+    {
+      "seed": 1,
+      "lambda_max": 1.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.8551393942939536,
+            "after": 0.8573738088621761,
+            "pct_removed": -0.6291655063118772,
+            "residual_above_chance": 0.35737380886217607
+          },
+          "MLP": {
+            "before": 0.8767618922936374,
+            "after": 0.8730784748156374,
+            "pct_removed": 0.9776512840978355,
+            "residual_above_chance": 0.3730784748156374
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.5966249052499499,
+            "after": 0.5867121758231629,
+            "pct_removed": 2.499270543926151,
+            "residual_above_chance": 0.3867121758231629
+          },
+          "MLP": {
+            "before": 0.623168905913961,
+            "after": 0.6200876517864555,
+            "pct_removed": 0.7281381227315332,
+            "residual_above_chance": 0.4200876517864555
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.5993670635535028,
+            "after": 0.5916544011346923,
+            "pct_removed": 2.207610053553142,
+            "residual_above_chance": 0.34165440113469225
+          },
+          "MLP": {
+            "before": 0.598589997233386,
+            "after": 0.5849341101408339,
+            "pct_removed": 3.917463840309036,
+            "residual_above_chance": 0.33493411014083385
+          }
+        }
+      },
+      "final_lambda": 0.9999092042625952,
+      "final_recon": 166.83851592812763
+    },
+    {
+      "seed": 7,
+      "lambda_max": 1.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.8551393942939536,
+            "after": 0.8529049797257311,
+            "pct_removed": 0.6291655063118772,
+            "residual_above_chance": 0.3529049797257311
+          },
+          "MLP": {
+            "before": 0.8705036587145112,
+            "after": 0.8677038404998096,
+            "pct_removed": 0.7556789653348397,
+            "residual_above_chance": 0.36770384049980964
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.5966249052499499,
+            "after": 0.5845419387101763,
+            "pct_removed": 3.0464467510326907,
+            "residual_above_chance": 0.38454193871017633
+          },
+          "MLP": {
+            "before": 0.62284390682524,
+            "after": 0.62343433084962,
+            "pct_removed": -0.13963167373343305,
+            "residual_above_chance": 0.42343433084961996
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.5993670635535028,
+            "after": 0.5927464979396787,
+            "pct_removed": 1.8950171050712636,
+            "residual_above_chance": 0.3427464979396787
+          },
+          "MLP": {
+            "before": 0.59310249049052,
+            "after": 0.5965691613713384,
+            "pct_removed": -1.010389308414014,
+            "residual_above_chance": 0.3465691613713384
+          }
+        }
+      },
+      "final_lambda": 0.9999092042625952,
+      "final_recon": 167.1384671614474
+    },
+    {
+      "seed": 13,
+      "lambda_max": 1.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.8551393942939536,
+            "after": 0.8505895893671296,
+            "pct_removed": 1.2811321413298529,
+            "residual_above_chance": 0.3505895893671296
+          },
+          "MLP": {
+            "before": 0.874567608899061,
+            "after": 0.8673204540209117,
+            "pct_removed": 1.9348055480425383,
+            "residual_above_chance": 0.36732045402091174
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.5966249052499499,
+            "after": 0.5778012647010711,
+            "pct_removed": 4.745955258915561,
+            "residual_above_chance": 0.37780126470107106
+          },
+          "MLP": {
+            "before": 0.6203807028437138,
+            "after": 0.6220057871257604,
+            "pct_removed": -0.38657442433810146,
+            "residual_above_chance": 0.42200578712576037
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.5993670635535028,
+            "after": 0.589754953832197,
+            "pct_removed": 2.751292472604177,
+            "residual_above_chance": 0.339754953832197
+          },
+          "MLP": {
+            "before": 0.6053944375022277,
+            "after": 0.6023866877878153,
+            "pct_removed": 0.8463131093303784,
+            "residual_above_chance": 0.35238668778781534
+          }
+        }
+      },
+      "final_lambda": 0.9999092042625952,
+      "final_recon": 166.64075557017486
+    },
+    {
+      "seed": 99,
+      "lambda_max": 1.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.8551393942939536,
+            "after": 0.8537305225578218,
+            "pct_removed": 0.39670950583580106,
+            "residual_above_chance": 0.3537305225578218
+          },
+          "MLP": {
+            "before": 0.8736818693065012,
+            "after": 0.8703574920620538,
+            "pct_removed": 0.8896276532273022,
+            "residual_above_chance": 0.3703574920620538
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.5966249052499499,
+            "after": 0.5832463144929358,
+            "pct_removed": 3.3731090962588453,
+            "residual_above_chance": 0.38324631449293584
+          },
+          "MLP": {
+            "before": 0.6165378810149374,
+            "after": 0.6174673214009075,
+            "pct_removed": -0.22313466033519344,
+            "residual_above_chance": 0.41746732140090753
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.5993670635535028,
+            "after": 0.5942996363857038,
+            "pct_removed": 1.4504593295821426,
+            "residual_above_chance": 0.3442996363857038
+          },
+          "MLP": {
+            "before": 0.5989343082243042,
+            "after": 0.6034814773517427,
+            "pct_removed": -1.303159081885275,
+            "residual_above_chance": 0.35348147735174273
+          }
+        }
+      },
+      "final_lambda": 0.9999092042625952,
+      "final_recon": 167.22483231717308
+    },
+    {
+      "seed": 42,
+      "lambda_max": 5.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.8551393942939536,
+            "after": 0.8302347905527293,
+            "pct_removed": 7.012627757260407,
+            "residual_above_chance": 0.3302347905527293
+          },
+          "MLP": {
+            "before": 0.8689923187150034,
+            "after": 0.8500865228103807,
+            "pct_removed": 5.123628581337727,
+            "residual_above_chance": 0.35008652281038066
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.5966249052499499,
+            "after": 0.549680631326017,
+            "pct_removed": 11.835937003085837,
+            "residual_above_chance": 0.34968063132601696
+          },
+          "MLP": {
+            "before": 0.6189655256469645,
+            "after": 0.5880572710436319,
+            "pct_removed": 7.377278728507363,
+            "residual_above_chance": 0.3880572710436319
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.5993670635535028,
+            "after": 0.5604340809914631,
+            "pct_removed": 11.143861749886282,
+            "residual_above_chance": 0.3104340809914631
+          },
+          "MLP": {
+            "before": 0.6016357334249663,
+            "after": 0.5891999416428562,
+            "pct_removed": 3.5365551905047754,
+            "residual_above_chance": 0.33919994164285616
+          }
+        }
+      },
+      "final_lambda": 4.999546021312976,
+      "final_recon": 168.88984536804608
+    },
+    {
+      "seed": 1,
+      "lambda_max": 5.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.8551393942939536,
+            "after": 0.8307579226963011,
+            "pct_removed": 6.865324430178986,
+            "residual_above_chance": 0.3307579226963011
+          },
+          "MLP": {
+            "before": 0.8767618922936374,
+            "after": 0.8525624378635661,
+            "pct_removed": 6.423010109316193,
+            "residual_above_chance": 0.3525624378635661
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.5966249052499499,
+            "after": 0.5561685023285954,
+            "pct_removed": 10.200167056039822,
+            "residual_above_chance": 0.35616850232859537
+          },
+          "MLP": {
+            "before": 0.623168905913961,
+            "after": 0.5926264239552256,
+            "pct_removed": 7.217562900272581,
+            "residual_above_chance": 0.39262642395522557
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.5993670635535028,
+            "after": 0.5704372758889484,
+            "pct_removed": 8.280628222449474,
+            "residual_above_chance": 0.32043727588894844
+          },
+          "MLP": {
+            "before": 0.598589997233386,
+            "after": 0.5808150347793851,
+            "pct_removed": 5.099102841468025,
+            "residual_above_chance": 0.3308150347793851
+          }
+        }
+      },
+      "final_lambda": 4.999546021312976,
+      "final_recon": 168.6714261458224
+    },
+    {
+      "seed": 7,
+      "lambda_max": 5.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.8551393942939536,
+            "after": 0.831684506905594,
+            "pct_removed": 6.604417241570679,
+            "residual_above_chance": 0.33168450690559403
+          },
+          "MLP": {
+            "before": 0.8705036587145112,
+            "after": 0.8444510358658541,
+            "pct_removed": 7.031677619338089,
+            "residual_above_chance": 0.3444510358658541
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.5966249052499499,
+            "after": 0.5547649435617348,
+            "pct_removed": 10.554042656962082,
+            "residual_above_chance": 0.35476494356173477
+          },
+          "MLP": {
+            "before": 0.62284390682524,
+            "after": 0.5825942115246309,
+            "pct_removed": 9.518806976032469,
+            "residual_above_chance": 0.38259421152463086
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.5993670635535028,
+            "after": 0.5748163068126959,
+            "pct_removed": 7.027209860910977,
+            "residual_above_chance": 0.3248163068126959
+          },
+          "MLP": {
+            "before": 0.59310249049052,
+            "after": 0.5786304698838733,
+            "pct_removed": 4.2179876298643535,
+            "residual_above_chance": 0.32863046988387334
+          }
+        }
+      },
+      "final_lambda": 4.999546021312976,
+      "final_recon": 168.29830103112548
+    },
+    {
+      "seed": 13,
+      "lambda_max": 5.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.8551393942939536,
+            "after": 0.8283629834334948,
+            "pct_removed": 7.5396904118993895,
+            "residual_above_chance": 0.3283629834334948
+          },
+          "MLP": {
+            "before": 0.874567608899061,
+            "after": 0.849583456253632,
+            "pct_removed": 6.670131653632079,
+            "residual_above_chance": 0.34958345625363196
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.5966249052499499,
+            "after": 0.5430444971520489,
+            "pct_removed": 13.509088155756391,
+            "residual_above_chance": 0.34304449715204893
+          },
+          "MLP": {
+            "before": 0.6203807028437138,
+            "after": 0.5820097963810347,
+            "pct_removed": 9.12765647973723,
+            "residual_above_chance": 0.38200979638103466
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.5993670635535028,
+            "after": 0.5714932582514469,
+            "pct_removed": 7.9783723796239325,
+            "residual_above_chance": 0.3214932582514469
+          },
+          "MLP": {
+            "before": 0.6053944375022277,
+            "after": 0.5904227659000779,
+            "pct_removed": 4.212691596236898,
+            "residual_above_chance": 0.3404227659000779
+          }
+        }
+      },
+      "final_lambda": 4.999546021312976,
+      "final_recon": 168.24019464070366
+    },
+    {
+      "seed": 99,
+      "lambda_max": 5.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.8551393942939536,
+            "after": 0.8284439592238737,
+            "pct_removed": 7.516889283193323,
+            "residual_above_chance": 0.3284439592238737
+          },
+          "MLP": {
+            "before": 0.8736818693065012,
+            "after": 0.8520192401331713,
+            "pct_removed": 5.797077929826381,
+            "residual_above_chance": 0.3520192401331713
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.5966249052499499,
+            "after": 0.5497838531534291,
+            "pct_removed": 11.80991195371403,
+            "residual_above_chance": 0.34978385315342914
+          },
+          "MLP": {
+            "before": 0.6165378810149374,
+            "after": 0.5878501069650801,
+            "pct_removed": 6.887194504364555,
+            "residual_above_chance": 0.3878501069650801
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.5993670635535028,
+            "after": 0.5712268477705471,
+            "pct_removed": 8.054627558973149,
+            "residual_above_chance": 0.3212268477705471
+          },
+          "MLP": {
+            "before": 0.5989343082243042,
+            "after": 0.5725537645982063,
+            "pct_removed": 7.560318089770572,
+            "residual_above_chance": 0.3225537645982063
+          }
+        }
+      },
+      "final_lambda": 4.999546021312976,
+      "final_recon": 168.2949068210269
+    },
+    {
+      "seed": 42,
+      "lambda_max": 20.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.8551393942939536,
+            "after": 0.8026106309440957,
+            "pct_removed": 14.791026902067403,
+            "residual_above_chance": 0.3026106309440957
+          },
+          "MLP": {
+            "before": 0.8689923187150034,
+            "after": 0.8302555695826394,
+            "pct_removed": 10.49798252366411,
+            "residual_above_chance": 0.33025556958263935
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.5966249052499499,
+            "after": 0.5132718740351125,
+            "pct_removed": 21.015581752817305,
+            "residual_above_chance": 0.31327187403511253
+          },
+          "MLP": {
+            "before": 0.6189655256469645,
+            "after": 0.5470009411162029,
+            "pct_removed": 17.176731765611084,
+            "residual_above_chance": 0.3470009411162029
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.5993670635535028,
+            "after": 0.5464342341701571,
+            "pct_removed": 15.151064569439415,
+            "residual_above_chance": 0.29643423417015713
+          },
+          "MLP": {
+            "before": 0.6016357334249663,
+            "after": 0.5704049592606142,
+            "pct_removed": 8.881570101013732,
+            "residual_above_chance": 0.3204049592606142
+          }
+        }
+      },
+      "final_lambda": 19.998184085251903,
+      "final_recon": 176.5677755471044
+    },
+    {
+      "seed": 1,
+      "lambda_max": 20.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.8551393942939536,
+            "after": 0.7989458521667445,
+            "pct_removed": 15.822953755644726,
+            "residual_above_chance": 0.2989458521667445
+          },
+          "MLP": {
+            "before": 0.8767618922936374,
+            "after": 0.83146164512128,
+            "pct_removed": 12.023574596830978,
+            "residual_above_chance": 0.33146164512127996
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.5966249052499499,
+            "after": 0.5309828839516759,
+            "pct_removed": 16.55015114517504,
+            "residual_above_chance": 0.3309828839516759
+          },
+          "MLP": {
+            "before": 0.623168905913961,
+            "after": 0.5551484617065838,
+            "pct_removed": 16.074064813544485,
+            "residual_above_chance": 0.3551484617065838
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.5993670635535028,
+            "after": 0.5508036107986838,
+            "pct_removed": 13.900409575209395,
+            "residual_above_chance": 0.3008036107986838
+          },
+          "MLP": {
+            "before": 0.598589997233386,
+            "after": 0.5679288502462779,
+            "pct_removed": 8.795762136163653,
+            "residual_above_chance": 0.3179288502462779
+          }
+        }
+      },
+      "final_lambda": 19.998184085251903,
+      "final_recon": 177.47043676184327
+    },
+    {
+      "seed": 7,
+      "lambda_max": 20.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.8551393942939536,
+            "after": 0.7870700569006535,
+            "pct_removed": 19.166935149120132,
+            "residual_above_chance": 0.28707005690065346
+          },
+          "MLP": {
+            "before": 0.8705036587145112,
+            "after": 0.8255251743744085,
+            "pct_removed": 12.13982191057403,
+            "residual_above_chance": 0.32552517437440853
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.5966249052499499,
+            "after": 0.5193624746277701,
+            "pct_removed": 19.47997455517567,
+            "residual_above_chance": 0.31936247462777007
+          },
+          "MLP": {
+            "before": 0.62284390682524,
+            "after": 0.5576298543528553,
+            "pct_removed": 15.422724892033862,
+            "residual_above_chance": 0.35762985435285527
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.5993670635535028,
+            "after": 0.5631423697642209,
+            "pct_removed": 10.368663096295085,
+            "residual_above_chance": 0.31314236976422094
+          },
+          "MLP": {
+            "before": 0.59310249049052,
+            "after": 0.5752491958715862,
+            "pct_removed": 5.203487329226222,
+            "residual_above_chance": 0.3252491958715862
+          }
+        }
+      },
+      "final_lambda": 19.998184085251903,
+      "final_recon": 176.65616018820128
+    },
+    {
+      "seed": 13,
+      "lambda_max": 20.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.8551393942939536,
+            "after": 0.8038596914287304,
+            "pct_removed": 14.439316980638402,
+            "residual_above_chance": 0.30385969142873037
+          },
+          "MLP": {
+            "before": 0.874567608899061,
+            "after": 0.8283816221341437,
+            "pct_removed": 12.330480710990582,
+            "residual_above_chance": 0.3283816221341437
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.5966249052499499,
+            "after": 0.5182456887794059,
+            "pct_removed": 19.76154685020348,
+            "residual_above_chance": 0.3182456887794059
+          },
+          "MLP": {
+            "before": 0.6203807028437138,
+            "after": 0.5401485022688856,
+            "pct_removed": 19.08560503184097,
+            "residual_above_chance": 0.34014850226888554
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.5993670635535028,
+            "after": 0.5545248940102361,
+            "pct_removed": 12.835259594068596,
+            "residual_above_chance": 0.3045248940102361
+          },
+          "MLP": {
+            "before": 0.6053944375022277,
+            "after": 0.5594312931401968,
+            "pct_removed": 12.932994867637104,
+            "residual_above_chance": 0.3094312931401968
+          }
+        }
+      },
+      "final_lambda": 19.998184085251903,
+      "final_recon": 176.1827823715722
+    },
+    {
+      "seed": 99,
+      "lambda_max": 20.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.8551393942939536,
+            "after": 0.784291731158949,
+            "pct_removed": 19.94925493294135,
+            "residual_above_chance": 0.284291731158949
+          },
+          "MLP": {
+            "before": 0.8736818693065012,
+            "after": 0.8192390273345017,
+            "pct_removed": 14.569302512063908,
+            "residual_above_chance": 0.3192390273345017
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.5966249052499499,
+            "after": 0.5174294872958972,
+            "pct_removed": 19.96733359548977,
+            "residual_above_chance": 0.3174294872958972
+          },
+          "MLP": {
+            "before": 0.6165378810149374,
+            "after": 0.5475664163370315,
+            "pct_removed": 16.558269444750106,
+            "residual_above_chance": 0.3475664163370315
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.5993670635535028,
+            "after": 0.5561257436495333,
+            "pct_removed": 12.377045352859213,
+            "residual_above_chance": 0.30612574364953327
+          },
+          "MLP": {
+            "before": 0.5989343082243042,
+            "after": 0.5660540857046426,
+            "pct_removed": 9.42304088324996,
+            "residual_above_chance": 0.31605408570464255
+          }
+        }
+      },
+      "final_lambda": 19.998184085251903,
+      "final_recon": 177.28642447042785
+    },
+    {
+      "seed": 42,
+      "lambda_max": 50.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.8551393942939536,
+            "after": 0.8236712925127359,
+            "pct_removed": 8.860774751215338,
+            "residual_above_chance": 0.32367129251273585
+          },
+          "MLP": {
+            "before": 0.8689923187150034,
+            "after": 0.8388327607358024,
+            "pct_removed": 8.173492089003396,
+            "residual_above_chance": 0.3388327607358024
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.5966249052499499,
+            "after": 0.556670698796452,
+            "pct_removed": 10.073549574079085,
+            "residual_above_chance": 0.356670698796452
+          },
+          "MLP": {
+            "before": 0.6189655256469645,
+            "after": 0.5928041871292472,
+            "pct_removed": 6.244269973602024,
+            "residual_above_chance": 0.3928041871292472
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.5993670635535028,
+            "after": 0.5758216808455543,
+            "pct_removed": 6.73943973666616,
+            "residual_above_chance": 0.3258216808455543
+          },
+          "MLP": {
+            "before": 0.6016357334249663,
+            "after": 0.5897565036032505,
+            "pct_removed": 3.378277203517116,
+            "residual_above_chance": 0.3397565036032505
+          }
+        }
+      },
+      "final_lambda": 49.99546021312976,
+      "final_recon": 192.20503920996748
+    },
+    {
+      "seed": 1,
+      "lambda_max": 50.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.8551393942939536,
+            "after": 0.8060145570927479,
+            "pct_removed": 13.832550821028985,
+            "residual_above_chance": 0.30601455709274794
+          },
+          "MLP": {
+            "before": 0.8767618922936374,
+            "after": 0.844507665410888,
+            "pct_removed": 8.560904789598906,
+            "residual_above_chance": 0.34450766541088795
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.5966249052499499,
+            "after": 0.5516512208151487,
+            "pct_removed": 11.33909742920938,
+            "residual_above_chance": 0.3516512208151487
+          },
+          "MLP": {
+            "before": 0.623168905913961,
+            "after": 0.5822855649897285,
+            "pct_removed": 9.661234640085995,
+            "residual_above_chance": 0.3822855649897285
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.5993670635535028,
+            "after": 0.5669194686618394,
+            "pct_removed": 9.28753688502588,
+            "residual_above_chance": 0.3169194686618394
+          },
+          "MLP": {
+            "before": 0.598589997233386,
+            "after": 0.5902612310708009,
+            "pct_removed": 2.3892728502501828,
+            "residual_above_chance": 0.34026123107080086
+          }
+        }
+      },
+      "final_lambda": 49.99546021312976,
+      "final_recon": 191.8681857729918
+    },
+    {
+      "seed": 7,
+      "lambda_max": 50.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.8551393942939536,
+            "after": 0.8253840018235605,
+            "pct_removed": 8.378510789981277,
+            "residual_above_chance": 0.32538400182356053
+          },
+          "MLP": {
+            "before": 0.8705036587145112,
+            "after": 0.8453948318896218,
+            "pct_removed": 6.776944365949371,
+            "residual_above_chance": 0.34539483188962183
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.5966249052499499,
+            "after": 0.546023787778939,
+            "pct_removed": 12.757927402244823,
+            "residual_above_chance": 0.346023787778939
+          },
+          "MLP": {
+            "before": 0.62284390682524,
+            "after": 0.5867066393101864,
+            "pct_removed": 8.546242935454915,
+            "residual_above_chance": 0.3867066393101864
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.5993670635535028,
+            "after": 0.5603985877128094,
+            "pct_removed": 11.154021058635282,
+            "residual_above_chance": 0.31039858771280937
+          },
+          "MLP": {
+            "before": 0.59310249049052,
+            "after": 0.5739434401573,
+            "pct_removed": 5.5840604088384875,
+            "residual_above_chance": 0.32394344015730003
+          }
+        }
+      },
+      "final_lambda": 49.99546021312976,
+      "final_recon": 192.84681056489882
+    },
+    {
+      "seed": 13,
+      "lambda_max": 50.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.8551393942939536,
+            "after": 0.8182156824065292,
+            "pct_removed": 10.396963130725547,
+            "residual_above_chance": 0.3182156824065292
+          },
+          "MLP": {
+            "before": 0.874567608899061,
+            "after": 0.8347021928030002,
+            "pct_removed": 10.643049518679511,
+            "residual_above_chance": 0.3347021928030002
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.5966249052499499,
+            "after": 0.5638058923467502,
+            "pct_removed": 8.274571886129412,
+            "residual_above_chance": 0.36380589234675015
+          },
+          "MLP": {
+            "before": 0.6203807028437138,
+            "after": 0.59045088169972,
+            "pct_removed": 7.119694348843811,
+            "residual_above_chance": 0.39045088169972003
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.5993670635535028,
+            "after": 0.5815409825997648,
+            "pct_removed": 5.102393102665221,
+            "residual_above_chance": 0.33154098259976483
+          },
+          "MLP": {
+            "before": 0.6053944375022277,
+            "after": 0.5913065046058672,
+            "pct_removed": 3.964027404416579,
+            "residual_above_chance": 0.3413065046058672
+          }
+        }
+      },
+      "final_lambda": 49.99546021312976,
+      "final_recon": 192.6807399468134
+    },
+    {
+      "seed": 99,
+      "lambda_max": 50.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.8551393942939536,
+            "after": 0.822784839477089,
+            "pct_removed": 9.110381820971474,
+            "residual_above_chance": 0.322784839477089
+          },
+          "MLP": {
+            "before": 0.8736818693065012,
+            "after": 0.8384472339276433,
+            "pct_removed": 9.429046007570069,
+            "residual_above_chance": 0.3384472339276433
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.5966249052499499,
+            "after": 0.5428144010886821,
+            "pct_removed": 13.567101674403656,
+            "residual_above_chance": 0.34281440108868205
+          },
+          "MLP": {
+            "before": 0.6165378810149374,
+            "after": 0.5904709297047666,
+            "pct_removed": 6.2580025726966495,
+            "residual_above_chance": 0.39047092970476655
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.5993670635535028,
+            "after": 0.569906698153248,
+            "pct_removed": 8.432496498269117,
+            "residual_above_chance": 0.319906698153248
+          },
+          "MLP": {
+            "before": 0.5989343082243042,
+            "after": 0.5836705132251998,
+            "pct_removed": 4.374403616766851,
+            "residual_above_chance": 0.3336705132251998
+          }
+        }
+      },
+      "final_lambda": 49.99546021312976,
+      "final_recon": 192.25924068169306
+    }
+  ],
+  "aggregate": {
+    "1": {
+      "gender": {
+        "mean": 0.10202249527216711,
+        "std": 0.9876645347580035,
+        "min": -1.1677291708048185,
+        "max": 1.2811321413298529,
+        "n_positive": 3,
+        "n_negative": 2,
+        "values": [
+          -1.1677291708048185,
+          -0.6291655063118772,
+          0.6291655063118772,
+          1.2811321413298529,
+          0.39670950583580106
+        ],
+        "t": 0.2309784614455277,
+        "p": 0.8286650283517741
+      },
+      "race": {
+        "mean": 3.265630558478397,
+        "std": 0.89456392624898,
+        "min": 2.499270543926151,
+        "max": 4.745955258915561,
+        "n_positive": 5,
+        "n_negative": 0,
+        "values": [
+          2.663371142258739,
+          2.499270543926151,
+          3.0464467510326907,
+          4.745955258915561,
+          3.3731090962588453
+        ],
+        "t": 8.162828506596764,
+        "p": 0.0012261377922593983
+      },
+      "age_bucket": {
+        "mean": 2.38215508734899,
+        "std": 0.8322943821688457,
+        "min": 1.4504593295821426,
+        "max": 3.6063964759342224,
+        "n_positive": 5,
+        "n_negative": 0,
+        "values": [
+          3.6063964759342224,
+          2.207610053553142,
+          1.8950171050712636,
+          2.751292472604177,
+          1.4504593295821426
+        ],
+        "t": 6.399971959895655,
+        "p": 0.003060997860128731
+      }
+    },
+    "5": {
+      "gender": {
+        "mean": 7.107789824820557,
+        "std": 0.4108313912752412,
+        "min": 6.604417241570679,
+        "max": 7.5396904118993895,
+        "n_positive": 5,
+        "n_negative": 0,
+        "values": [
+          7.012627757260407,
+          6.865324430178986,
+          6.604417241570679,
+          7.5396904118993895,
+          7.516889283193323
+        ],
+        "t": 38.68618989592266,
+        "p": 2.666829995424657e-06
+      },
+      "race": {
+        "mean": 11.581829365111632,
+        "std": 1.3034814017446157,
+        "min": 10.200167056039822,
+        "max": 13.509088155756391,
+        "n_positive": 5,
+        "n_negative": 0,
+        "values": [
+          11.835937003085837,
+          10.200167056039822,
+          10.554042656962082,
+          13.509088155756391,
+          11.80991195371403
+        ],
+        "t": 19.86814520677515,
+        "p": 3.786366896078853e-05
+      },
+      "age_bucket": {
+        "mean": 8.496939954368765,
+        "std": 1.55544566678367,
+        "min": 7.027209860910977,
+        "max": 11.143861749886282,
+        "n_positive": 5,
+        "n_negative": 0,
+        "values": [
+          11.143861749886282,
+          8.280628222449474,
+          7.027209860910977,
+          7.9783723796239325,
+          8.054627558973149
+        ],
+        "t": 12.214978474940832,
+        "p": 0.0002578817912181514
+      }
+    },
+    "20": {
+      "gender": {
+        "mean": 16.8338975440824,
+        "std": 2.5533243039736213,
+        "min": 14.439316980638402,
+        "max": 19.94925493294135,
+        "n_positive": 5,
+        "n_negative": 0,
+        "values": [
+          14.791026902067403,
+          15.822953755644726,
+          19.166935149120132,
+          14.439316980638402,
+          19.94925493294135
+        ],
+        "t": 14.742247655832399,
+        "p": 0.00012322267884660453
+      },
+      "race": {
+        "mean": 19.354917579772255,
+        "std": 1.6718672371972578,
+        "min": 16.55015114517504,
+        "max": 21.015581752817305,
+        "n_positive": 5,
+        "n_negative": 0,
+        "values": [
+          21.015581752817305,
+          16.55015114517504,
+          19.47997455517567,
+          19.76154685020348,
+          19.96733359548977
+        ],
+        "t": 25.886571878655783,
+        "p": 1.3229541593817038e-05
+      },
+      "age_bucket": {
+        "mean": 12.92648843757434,
+        "std": 1.7853530624581755,
+        "min": 10.368663096295085,
+        "max": 15.151064569439415,
+        "n_positive": 5,
+        "n_negative": 0,
+        "values": [
+          15.151064569439415,
+          13.900409575209395,
+          10.368663096295085,
+          12.835259594068596,
+          12.377045352859213
+        ],
+        "t": 16.189798793625673,
+        "p": 8.515679190504514e-05
+      }
+    },
+    "50": {
+      "gender": {
+        "mean": 10.115836262784525,
+        "std": 2.207793992551139,
+        "min": 8.378510789981277,
+        "max": 13.832550821028985,
+        "n_positive": 5,
+        "n_negative": 0,
+        "values": [
+          8.860774751215338,
+          13.832550821028985,
+          8.378510789981277,
+          10.396963130725547,
+          9.110381820971474
+        ],
+        "t": 10.245384129660676,
+        "p": 0.0005116194165761358
+      },
+      "race": {
+        "mean": 11.20244959321327,
+        "std": 2.114039168948262,
+        "min": 8.274571886129412,
+        "max": 13.567101674403656,
+        "n_positive": 5,
+        "n_negative": 0,
+        "values": [
+          10.073549574079085,
+          11.33909742920938,
+          12.757927402244823,
+          8.274571886129412,
+          13.567101674403656
+        ],
+        "t": 11.84908925665832,
+        "p": 0.00029044647304745806
+      },
+      "age_bucket": {
+        "mean": 8.143177456252332,
+        "std": 2.3278365642112817,
+        "min": 5.102393102665221,
+        "max": 11.154021058635282,
+        "n_positive": 5,
+        "n_negative": 0,
+        "values": [
+          6.73943973666616,
+          9.28753688502588,
+          11.154021058635282,
+          5.102393102665221,
+          8.432496498269117
+        ],
+        "t": 7.8221549678224545,
+        "p": 0.0014419423926566779
+      }
+    }
+  }
+}

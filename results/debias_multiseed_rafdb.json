@@ -1,0 +1,1683 @@
+{
+  "args": {
+    "data_root": "../../data/rafdb_raw",
+    "dataset": "rafdb",
+    "demographics": "../../data/rafdb_demographics.csv",
+    "checkpoint": "../../checkpoints/rafdb/vae_best.pt",
+    "reference_latents": "../../latents/rafdb_latents.npz",
+    "output": "../../results/debias_multiseed_rafdb.json",
+    "seeds": "42,1,7,13,99",
+    "lambdas": "1,5,20,50",
+    "epochs": 20,
+    "batch_size": 128,
+    "lr": 0.0001,
+    "adv_lr": 0.001,
+    "beta": 1.0,
+    "num_workers": 4
+  },
+  "dataset": "rafdb",
+  "seeds": [
+    42,
+    1,
+    7,
+    13,
+    99
+  ],
+  "lambdas": [
+    1.0,
+    5.0,
+    20.0,
+    50.0
+  ],
+  "headline_probe": "LogReg",
+  "eval_targets": [
+    "gender",
+    "race",
+    "age_bucket",
+    "emotion"
+  ],
+  "runs": [
+    {
+      "seed": 42,
+      "lambda_max": 1.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.7462441980133709,
+            "after": 0.7370230829692058,
+            "pct_removed": 3.7447034766944705,
+            "residual_above_chance": 0.23702308296920582
+          },
+          "MLP": {
+            "before": 0.752856943063483,
+            "after": 0.7544699580475823,
+            "pct_removed": -0.637916034480533,
+            "residual_above_chance": 0.2544699580475823
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.41671262038678447,
+            "after": 0.40299107598533557,
+            "pct_removed": 6.331677581563529,
+            "residual_above_chance": 0.20299107598533556
+          },
+          "MLP": {
+            "before": 0.4390827204275663,
+            "after": 0.44761886616812213,
+            "pct_removed": -3.5703733524907704,
+            "residual_above_chance": 0.24761886616812212
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.49543480853649124,
+            "after": 0.48618251244123944,
+            "pct_removed": 3.769757089641247,
+            "residual_above_chance": 0.23618251244123944
+          },
+          "MLP": {
+            "before": 0.515158450088371,
+            "after": 0.5131050055830332,
+            "pct_removed": 0.7744216730236122,
+            "residual_above_chance": 0.2631050055830332
+          }
+        },
+        "emotion": {
+          "chance": 0.14285714285714285,
+          "LogReg": {
+            "before": 0.4822069748166525,
+            "after": 0.473107886621181,
+            "pct_removed": 2.6813298073349823,
+            "residual_above_chance": 0.3302507437640381
+          },
+          "MLP": {
+            "before": 0.4966193014931107,
+            "after": 0.5029930850113624,
+            "pct_removed": -1.8017143333893326,
+            "residual_above_chance": 0.36013594215421957
+          }
+        }
+      },
+      "final_lambda": 0.9999092042625952,
+      "final_recon": 212.6513991355896
+    },
+    {
+      "seed": 1,
+      "lambda_max": 1.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.7462441980133709,
+            "after": 0.739585542930769,
+            "pct_removed": 2.7040860805339393,
+            "residual_above_chance": 0.23958554293076895
+          },
+          "MLP": {
+            "before": 0.7503633481506546,
+            "after": 0.7474346706614063,
+            "pct_removed": 1.16977085938553,
+            "residual_above_chance": 0.24743467066140634
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.41671262038678447,
+            "after": 0.40339510930041306,
+            "pct_removed": 6.145240209177749,
+            "residual_above_chance": 0.20339510930041305
+          },
+          "MLP": {
+            "before": 0.4378503442127718,
+            "after": 0.44014445389986107,
+            "pct_removed": -0.9645181278514529,
+            "residual_above_chance": 0.24014445389986105
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.49543480853649124,
+            "after": 0.48896594766294493,
+            "pct_removed": 2.635673771018719,
+            "residual_above_chance": 0.23896594766294493
+          },
+          "MLP": {
+            "before": 0.5021043186189035,
+            "after": 0.4974934897346955,
+            "pct_removed": 1.8289368898824816,
+            "residual_above_chance": 0.24749348973469548
+          }
+        },
+        "emotion": {
+          "chance": 0.14285714285714285,
+          "LogReg": {
+            "before": 0.4822069748166525,
+            "after": 0.4841899775545508,
+            "pct_removed": -0.5843535346541491,
+            "residual_above_chance": 0.34133283469740794
+          },
+          "MLP": {
+            "before": 0.5066935790343491,
+            "after": 0.49698424008353925,
+            "pct_removed": 2.6685999491488275,
+            "residual_above_chance": 0.3541270972263964
+          }
+        }
+      },
+      "final_lambda": 0.9999092042625952,
+      "final_recon": 211.18964433670044
+    },
+    {
+      "seed": 7,
+      "lambda_max": 1.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.7462441980133709,
+            "after": 0.7367027754740104,
+            "pct_removed": 3.8747806512145426,
+            "residual_above_chance": 0.23670277547401042
+          },
+          "MLP": {
+            "before": 0.7519867779106428,
+            "after": 0.7526388704091562,
+            "pct_removed": -0.2587804423391727,
+            "residual_above_chance": 0.2526388704091562
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.41671262038678447,
+            "after": 0.40657011725944175,
+            "pct_removed": 4.6801626546901485,
+            "residual_above_chance": 0.20657011725944174
+          },
+          "MLP": {
+            "before": 0.4437331373107892,
+            "after": 0.4358046850635337,
+            "pct_removed": 3.2529233959458654,
+            "residual_above_chance": 0.2358046850635337
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.49543480853649124,
+            "after": 0.4887884114874079,
+            "pct_removed": 2.7080091404781865,
+            "residual_above_chance": 0.23878841148740793
+          },
+          "MLP": {
+            "before": 0.5031140221181557,
+            "after": 0.5050439138433532,
+            "pct_removed": -0.7624594279872179,
+            "residual_above_chance": 0.25504391384335323
+          }
+        },
+        "emotion": {
+          "chance": 0.14285714285714285,
+          "LogReg": {
+            "before": 0.4822069748166525,
+            "after": 0.4808342950778858,
+            "pct_removed": 0.4045028491219312,
+            "residual_above_chance": 0.3379771522207429
+          },
+          "MLP": {
+            "before": 0.5092794891013994,
+            "after": 0.49645779956260533,
+            "pct_removed": 3.499156006781085,
+            "residual_above_chance": 0.3536006567054625
+          }
+        }
+      },
+      "final_lambda": 0.9999092042625952,
+      "final_recon": 211.60094022750854
+    },
+    {
+      "seed": 13,
+      "lambda_max": 1.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.7462441980133709,
+            "after": 0.7383272679662323,
+            "pct_removed": 3.215072724965802,
+            "residual_above_chance": 0.23832726796623227
+          },
+          "MLP": {
+            "before": 0.7579004576975183,
+            "after": 0.7552816729275765,
+            "pct_removed": 1.0154246306198071,
+            "residual_above_chance": 0.25528167292757653
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.41671262038678447,
+            "after": 0.41303280558408834,
+            "pct_removed": 1.6980159236358607,
+            "residual_above_chance": 0.21303280558408833
+          },
+          "MLP": {
+            "before": 0.4186892000896137,
+            "after": 0.430419952208013,
+            "pct_removed": -5.36412045660797,
+            "residual_above_chance": 0.23041995220801298
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.49543480853649124,
+            "after": 0.4920078014753376,
+            "pct_removed": 1.3963003379954935,
+            "residual_above_chance": 0.24200780147533762
+          },
+          "MLP": {
+            "before": 0.5046853467168781,
+            "after": 0.4891128871340599,
+            "pct_removed": 6.114391653686068,
+            "residual_above_chance": 0.23911288713405993
+          }
+        },
+        "emotion": {
+          "chance": 0.14285714285714285,
+          "LogReg": {
+            "before": 0.4822069748166525,
+            "after": 0.4814882650989237,
+            "pct_removed": 0.21179020881747762,
+            "residual_above_chance": 0.3386311222417808
+          },
+          "MLP": {
+            "before": 0.4921694245522856,
+            "after": 0.5033663695385283,
+            "pct_removed": -3.2054255097777276,
+            "residual_above_chance": 0.36050922668138546
+          }
+        }
+      },
+      "final_lambda": 0.9999092042625952,
+      "final_recon": 212.68348185221353
+    },
+    {
+      "seed": 99,
+      "lambda_max": 1.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.7462441980133709,
+            "after": 0.7413248105042154,
+            "pct_removed": 1.9977678860431174,
+            "residual_above_chance": 0.2413248105042154
+          },
+          "MLP": {
+            "before": 0.7573871580287083,
+            "after": 0.7528099702987596,
+            "pct_removed": 1.7783279340759157,
+            "residual_above_chance": 0.2528099702987596
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.41671262038678447,
+            "after": 0.40264994042294966,
+            "pct_removed": 6.489091377666892,
+            "residual_above_chance": 0.20264994042294965
+          },
+          "MLP": {
+            "before": 0.45612517493319116,
+            "after": 0.44789336203590624,
+            "pct_removed": 3.2139803904212623,
+            "residual_above_chance": 0.24789336203590623
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.49543480853649124,
+            "after": 0.4823583455723117,
+            "pct_removed": 5.327876287048875,
+            "residual_above_chance": 0.23235834557231172
+          },
+          "MLP": {
+            "before": 0.5057493552127472,
+            "after": 0.5151323835655167,
+            "pct_removed": -3.6688375401627686,
+            "residual_above_chance": 0.2651323835655167
+          }
+        },
+        "emotion": {
+          "chance": 0.14285714285714285,
+          "LogReg": {
+            "before": 0.4822069748166525,
+            "after": 0.4846217059462168,
+            "pct_removed": -0.7115757552083971,
+            "residual_above_chance": 0.34176456308907394
+          },
+          "MLP": {
+            "before": 0.489420214101686,
+            "after": 0.4939458731152931,
+            "pct_removed": -1.3058687982406707,
+            "residual_above_chance": 0.35108873025815024
+          }
+        }
+      },
+      "final_lambda": 0.9999092042625952,
+      "final_recon": 213.2891723314921
+    },
+    {
+      "seed": 42,
+      "lambda_max": 5.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.7462441980133709,
+            "after": 0.7269328655044344,
+            "pct_removed": 7.842350262355412,
+            "residual_above_chance": 0.22693286550443437
+          },
+          "MLP": {
+            "before": 0.752856943063483,
+            "after": 0.741586667726565,
+            "pct_removed": 4.457174559010822,
+            "residual_above_chance": 0.241586667726565
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.41671262038678447,
+            "after": 0.3870961737834374,
+            "pct_removed": 13.666230674747137,
+            "residual_above_chance": 0.1870961737834374
+          },
+          "MLP": {
+            "before": 0.4390827204275663,
+            "after": 0.40628454372193656,
+            "pct_removed": 13.71833842570251,
+            "residual_above_chance": 0.20628454372193655
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.49543480853649124,
+            "after": 0.47062492047213667,
+            "pct_removed": 10.108544999095287,
+            "residual_above_chance": 0.22062492047213667
+          },
+          "MLP": {
+            "before": 0.515158450088371,
+            "after": 0.4977250392095829,
+            "pct_removed": 6.574714429420594,
+            "residual_above_chance": 0.2477250392095829
+          }
+        },
+        "emotion": {
+          "chance": 0.14285714285714285,
+          "LogReg": {
+            "before": 0.4822069748166525,
+            "after": 0.4757550096704928,
+            "pct_removed": 1.901272533097801,
+            "residual_above_chance": 0.33289786681334993
+          },
+          "MLP": {
+            "before": 0.4966193014931107,
+            "after": 0.4982796254287683,
+            "pct_removed": -0.4693333911290808,
+            "residual_above_chance": 0.35542248257162545
+          }
+        }
+      },
+      "final_lambda": 4.999546021312976,
+      "final_recon": 213.99910481770834
+    },
+    {
+      "seed": 1,
+      "lambda_max": 5.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.7462441980133709,
+            "after": 0.7272187404752624,
+            "pct_removed": 7.726256168307977,
+            "residual_above_chance": 0.22721874047526236
+          },
+          "MLP": {
+            "before": 0.7503633481506546,
+            "after": 0.7406841955138246,
+            "pct_removed": 3.8660421776296445,
+            "residual_above_chance": 0.24068419551382458
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.41671262038678447,
+            "after": 0.37657798454408625,
+            "pct_removed": 18.519750151637087,
+            "residual_above_chance": 0.17657798454408624
+          },
+          "MLP": {
+            "before": 0.4378503442127718,
+            "after": 0.40048921418759137,
+            "pct_removed": 15.707830967761224,
+            "residual_above_chance": 0.20048921418759136
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.49543480853649124,
+            "after": 0.47526328209679747,
+            "pct_removed": 8.21869015237693,
+            "residual_above_chance": 0.22526328209679747
+          },
+          "MLP": {
+            "before": 0.5021043186189035,
+            "after": 0.4873675385427067,
+            "pct_removed": 5.845508778639292,
+            "residual_above_chance": 0.2373675385427067
+          }
+        },
+        "emotion": {
+          "chance": 0.14285714285714285,
+          "LogReg": {
+            "before": 0.4822069748166525,
+            "after": 0.483493435859342,
+            "pct_removed": -0.37909582428879246,
+            "residual_above_chance": 0.34063629300219916
+          },
+          "MLP": {
+            "before": 0.5066935790343491,
+            "after": 0.49520172713272875,
+            "pct_removed": 3.1585214560597867,
+            "residual_above_chance": 0.3523445842755859
+          }
+        }
+      },
+      "final_lambda": 4.999546021312976,
+      "final_recon": 212.27211141586304
+    },
+    {
+      "seed": 7,
+      "lambda_max": 5.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.7462441980133709,
+            "after": 0.7218882881381654,
+            "pct_removed": 9.890957866906986,
+            "residual_above_chance": 0.2218882881381654
+          },
+          "MLP": {
+            "before": 0.7519867779106428,
+            "after": 0.747764330200257,
+            "pct_removed": 1.6756624079233031,
+            "residual_above_chance": 0.247764330200257
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.41671262038678447,
+            "after": 0.3873663066644336,
+            "pct_removed": 13.541580398028563,
+            "residual_above_chance": 0.1873663066644336
+          },
+          "MLP": {
+            "before": 0.4437331373107892,
+            "after": 0.4227514377578651,
+            "pct_removed": 8.60847227604095,
+            "residual_above_chance": 0.2227514377578651
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.49543480853649124,
+            "after": 0.4702060220459249,
+            "pct_removed": 10.279221044889137,
+            "residual_above_chance": 0.22020602204592488
+          },
+          "MLP": {
+            "before": 0.5031140221181557,
+            "after": 0.4990193326077757,
+            "pct_removed": 1.6177252750021753,
+            "residual_above_chance": 0.2490193326077757
+          }
+        },
+        "emotion": {
+          "chance": 0.14285714285714285,
+          "LogReg": {
+            "before": 0.4822069748166525,
+            "after": 0.48102880627075445,
+            "pct_removed": 0.3471840663939402,
+            "residual_above_chance": 0.3381716634136116
+          },
+          "MLP": {
+            "before": 0.5092794891013994,
+            "after": 0.488476243077048,
+            "pct_removed": 5.677395562137468,
+            "residual_above_chance": 0.34561910021990516
+          }
+        }
+      },
+      "final_lambda": 4.999546021312976,
+      "final_recon": 212.71789169311523
+    },
+    {
+      "seed": 13,
+      "lambda_max": 5.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.7462441980133709,
+            "after": 0.7234439155816524,
+            "pct_removed": 9.25921610160352,
+            "residual_above_chance": 0.22344391558165244
+          },
+          "MLP": {
+            "before": 0.7579004576975183,
+            "after": 0.7434980979218484,
+            "pct_removed": 5.584464604774734,
+            "residual_above_chance": 0.2434980979218484
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.41671262038678447,
+            "after": 0.3801390575213248,
+            "pct_removed": 16.876526526320372,
+            "residual_above_chance": 0.1801390575213248
+          },
+          "MLP": {
+            "before": 0.4186892000896137,
+            "after": 0.41086099353830674,
+            "pct_removed": 3.579603632963646,
+            "residual_above_chance": 0.21086099353830673
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.49543480853649124,
+            "after": 0.46948025367058577,
+            "pct_removed": 10.574928234780746,
+            "residual_above_chance": 0.21948025367058577
+          },
+          "MLP": {
+            "before": 0.5046853467168781,
+            "after": 0.4680468248093589,
+            "pct_removed": 14.385798939680894,
+            "residual_above_chance": 0.21804682480935889
+          }
+        },
+        "emotion": {
+          "chance": 0.14285714285714285,
+          "LogReg": {
+            "before": 0.4822069748166525,
+            "after": 0.48333610220238266,
+            "pct_removed": -0.3327325607354072,
+            "residual_above_chance": 0.3404789593452398
+          },
+          "MLP": {
+            "before": 0.4921694245522856,
+            "after": 0.4937299034571658,
+            "pct_removed": -0.44672889750898825,
+            "residual_above_chance": 0.3508727606000229
+          }
+        }
+      },
+      "final_lambda": 4.999546021312976,
+      "final_recon": 213.93916670481363
+    },
+    {
+      "seed": 99,
+      "lambda_max": 5.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.7462441980133709,
+            "after": 0.7279626530387553,
+            "pct_removed": 7.424152577849965,
+            "residual_above_chance": 0.2279626530387553
+          },
+          "MLP": {
+            "before": 0.7573871580287083,
+            "after": 0.7563813882428658,
+            "pct_removed": 0.39076144806348717,
+            "residual_above_chance": 0.2563813882428658
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.41671262038678447,
+            "after": 0.3779254980317023,
+            "pct_removed": 17.897952729220705,
+            "residual_above_chance": 0.17792549803170227
+          },
+          "MLP": {
+            "before": 0.45612517493319116,
+            "after": 0.41360591660952817,
+            "pct_removed": 16.60096799729035,
+            "residual_above_chance": 0.21360591660952816
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.49543480853649124,
+            "after": 0.467897695979831,
+            "pct_removed": 11.219725808601444,
+            "residual_above_chance": 0.217897695979831
+          },
+          "MLP": {
+            "before": 0.5057493552127472,
+            "after": 0.49046716236903665,
+            "pct_removed": 5.975457037222227,
+            "residual_above_chance": 0.24046716236903665
+          }
+        },
+        "emotion": {
+          "chance": 0.14285714285714285,
+          "LogReg": {
+            "before": 0.4822069748166525,
+            "after": 0.48180769067392315,
+            "pct_removed": 0.11766151184567838,
+            "residual_above_chance": 0.3389505478167803
+          },
+          "MLP": {
+            "before": 0.489420214101686,
+            "after": 0.4883219297903326,
+            "pct_removed": 0.3169074845191503,
+            "residual_above_chance": 0.34546478693318977
+          }
+        }
+      },
+      "final_lambda": 4.999546021312976,
+      "final_recon": 214.42000436782837
+    },
+    {
+      "seed": 42,
+      "lambda_max": 20.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.7462441980133709,
+            "after": 0.7008376880557824,
+            "pct_removed": 18.43962632375322,
+            "residual_above_chance": 0.2008376880557824
+          },
+          "MLP": {
+            "before": 0.752856943063483,
+            "after": 0.7289684228245978,
+            "pct_removed": 9.447444847455776,
+            "residual_above_chance": 0.22896842282459784
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.41671262038678447,
+            "after": 0.370852322353329,
+            "pct_removed": 21.161803106623378,
+            "residual_above_chance": 0.17085232235332898
+          },
+          "MLP": {
+            "before": 0.4390827204275663,
+            "after": 0.37965825213026433,
+            "pct_removed": 24.855191621974836,
+            "residual_above_chance": 0.17965825213026432
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.49543480853649124,
+            "after": 0.4723172155108716,
+            "pct_removed": 9.419036021609193,
+            "residual_above_chance": 0.22231721551087158
+          },
+          "MLP": {
+            "before": 0.515158450088371,
+            "after": 0.49590788106266354,
+            "pct_removed": 7.260024720800612,
+            "residual_above_chance": 0.24590788106266354
+          }
+        },
+        "emotion": {
+          "chance": 0.14285714285714285,
+          "LogReg": {
+            "before": 0.4822069748166525,
+            "after": 0.4731545656382575,
+            "pct_removed": 2.6675743807278844,
+            "residual_above_chance": 0.3302974227811146
+          },
+          "MLP": {
+            "before": 0.4966193014931107,
+            "after": 0.49073083371160164,
+            "pct_removed": 1.6645273209021907,
+            "residual_above_chance": 0.3478736908544588
+          }
+        }
+      },
+      "final_lambda": 19.998184085251903,
+      "final_recon": 218.85437170664468
+    },
+    {
+      "seed": 1,
+      "lambda_max": 20.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.7462441980133709,
+            "after": 0.7091323131387286,
+            "pct_removed": 15.07117129014637,
+            "residual_above_chance": 0.2091323131387286
+          },
+          "MLP": {
+            "before": 0.7503633481506546,
+            "after": 0.7238675206499501,
+            "pct_removed": 10.58294981930057,
+            "residual_above_chance": 0.22386752064995008
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.41671262038678447,
+            "after": 0.3983808878752359,
+            "pct_removed": 8.459005515613466,
+            "residual_above_chance": 0.1983808878752359
+          },
+          "MLP": {
+            "before": 0.4378503442127718,
+            "after": 0.4134086953927052,
+            "pct_removed": 10.276061992242504,
+            "residual_above_chance": 0.21340869539270518
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.49543480853649124,
+            "after": 0.48090380753440654,
+            "pct_removed": 5.9205135118086725,
+            "residual_above_chance": 0.23090380753440654
+          },
+          "MLP": {
+            "before": 0.5021043186189035,
+            "after": 0.49218922477587457,
+            "pct_removed": 3.932932960984766,
+            "residual_above_chance": 0.24218922477587457
+          }
+        },
+        "emotion": {
+          "chance": 0.14285714285714285,
+          "LogReg": {
+            "before": 0.4822069748166525,
+            "after": 0.4726920508071736,
+            "pct_removed": 2.8038687847690444,
+            "residual_above_chance": 0.32983490795003073
+          },
+          "MLP": {
+            "before": 0.5066935790343491,
+            "after": 0.4450260705384531,
+            "pct_removed": 16.949239373557646,
+            "residual_above_chance": 0.30216892768131026
+          }
+        }
+      },
+      "final_lambda": 19.998184085251903,
+      "final_recon": 218.3483599026998
+    },
+    {
+      "seed": 7,
+      "lambda_max": 20.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.7462441980133709,
+            "after": 0.7177013356843804,
+            "pct_removed": 11.591283189316258,
+            "residual_above_chance": 0.21770133568438044
+          },
+          "MLP": {
+            "before": 0.7519867779106428,
+            "after": 0.7397211475637714,
+            "pct_removed": 4.867569024284666,
+            "residual_above_chance": 0.2397211475637714
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.41671262038678447,
+            "after": 0.39130450433039055,
+            "pct_removed": 11.724336132822359,
+            "residual_above_chance": 0.19130450433039053
+          },
+          "MLP": {
+            "before": 0.4437331373107892,
+            "after": 0.4023092242141675,
+            "pct_removed": 16.99560164599254,
+            "residual_above_chance": 0.20230922421416747
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.49543480853649124,
+            "after": 0.46957199233932634,
+            "pct_removed": 10.537550216036134,
+            "residual_above_chance": 0.21957199233932634
+          },
+          "MLP": {
+            "before": 0.5031140221181557,
+            "after": 0.49511609219684477,
+            "pct_removed": 3.1598130575229177,
+            "residual_above_chance": 0.24511609219684477
+          }
+        },
+        "emotion": {
+          "chance": 0.14285714285714285,
+          "LogReg": {
+            "before": 0.4822069748166525,
+            "after": 0.46334805516718414,
+            "pct_removed": 5.5573682004117035,
+            "residual_above_chance": 0.3204909123100413
+          },
+          "MLP": {
+            "before": 0.5092794891013994,
+            "after": 0.4797631042851541,
+            "pct_removed": 8.055290600800237,
+            "residual_above_chance": 0.33690596142801127
+          }
+        }
+      },
+      "final_lambda": 19.998184085251903,
+      "final_recon": 220.20619614919028
+    },
+    {
+      "seed": 13,
+      "lambda_max": 20.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.7462441980133709,
+            "after": 0.7247366230705565,
+            "pct_removed": 8.734246376699021,
+            "residual_above_chance": 0.22473662307055653
+          },
+          "MLP": {
+            "before": 0.7579004576975183,
+            "after": 0.7309487180686159,
+            "pct_removed": 10.450442728765172,
+            "residual_above_chance": 0.23094871806861594
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.41671262038678447,
+            "after": 0.3863477894956253,
+            "pct_removed": 14.011565564093406,
+            "residual_above_chance": 0.1863477894956253
+          },
+          "MLP": {
+            "before": 0.4186892000896137,
+            "after": 0.4225545857374148,
+            "pct_removed": -1.7675247091384234,
+            "residual_above_chance": 0.22255458573741477
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.49543480853649124,
+            "after": 0.448156913092636,
+            "pct_removed": 19.262913734921984,
+            "residual_above_chance": 0.198156913092636
+          },
+          "MLP": {
+            "before": 0.5046853467168781,
+            "after": 0.46564138441336533,
+            "pct_removed": 15.330274319596473,
+            "residual_above_chance": 0.21564138441336533
+          }
+        },
+        "emotion": {
+          "chance": 0.14285714285714285,
+          "LogReg": {
+            "before": 0.4822069748166525,
+            "after": 0.4709618758871717,
+            "pct_removed": 3.313718726350369,
+            "residual_above_chance": 0.32810473303002885
+          },
+          "MLP": {
+            "before": 0.4921694245522856,
+            "after": 0.46383952629013764,
+            "pct_removed": 8.110192440033485,
+            "residual_above_chance": 0.3209823834329948
+          }
+        }
+      },
+      "final_lambda": 19.998184085251903,
+      "final_recon": 220.4959085782369
+    },
+    {
+      "seed": 99,
+      "lambda_max": 20.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.7462441980133709,
+            "after": 0.7032634806521095,
+            "pct_removed": 17.454509672925404,
+            "residual_above_chance": 0.20326348065210953
+          },
+          "MLP": {
+            "before": 0.7573871580287083,
+            "after": 0.7336937554279048,
+            "pct_removed": 9.205355380691037,
+            "residual_above_chance": 0.23369375542790483
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.41671262038678447,
+            "after": 0.4053006011428897,
+            "pct_removed": 5.265968923972605,
+            "residual_above_chance": 0.20530060114288967
+          },
+          "MLP": {
+            "before": 0.45612517493319116,
+            "after": 0.44417091285864574,
+            "pct_removed": 4.667351453313257,
+            "residual_above_chance": 0.24417091285864573
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.49543480853649124,
+            "after": 0.47233481678358347,
+            "pct_removed": 9.411864556071423,
+            "residual_above_chance": 0.22233481678358347
+          },
+          "MLP": {
+            "before": 0.5057493552127472,
+            "after": 0.5053807969564966,
+            "pct_removed": 0.14410916342057126,
+            "residual_above_chance": 0.2553807969564966
+          }
+        },
+        "emotion": {
+          "chance": 0.14285714285714285,
+          "LogReg": {
+            "before": 0.4822069748166525,
+            "after": 0.48003058371423746,
+            "pct_removed": 0.6413414410279425,
+            "residual_above_chance": 0.3371734408570946
+          },
+          "MLP": {
+            "before": 0.489420214101686,
+            "after": 0.48710974837240784,
+            "pct_removed": 0.6666797246980356,
+            "residual_above_chance": 0.344252605515265
+          }
+        }
+      },
+      "final_lambda": 19.998184085251903,
+      "final_recon": 219.8063317934672
+    },
+    {
+      "seed": 42,
+      "lambda_max": 50.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.7462441980133709,
+            "after": 0.7291531256867907,
+            "pct_removed": 6.940700517805586,
+            "residual_above_chance": 0.2291531256867907
+          },
+          "MLP": {
+            "before": 0.752856943063483,
+            "after": 0.7527651229985033,
+            "pct_removed": 0.03631304874104699,
+            "residual_above_chance": 0.2527651229985033
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.41671262038678447,
+            "after": 0.4102968004375219,
+            "pct_removed": 2.9605197601375113,
+            "residual_above_chance": 0.2102968004375219
+          },
+          "MLP": {
+            "before": 0.4390827204275663,
+            "after": 0.4080172578451138,
+            "pct_removed": 12.993604275079457,
+            "residual_above_chance": 0.20801725784511377
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.49543480853649124,
+            "after": 0.4987397763465614,
+            "pct_removed": -1.3465766448440777,
+            "residual_above_chance": 0.24873977634656141
+          },
+          "MLP": {
+            "before": 0.515158450088371,
+            "after": 0.5097852342460948,
+            "pct_removed": 2.0264169746374177,
+            "residual_above_chance": 0.2597852342460948
+          }
+        },
+        "emotion": {
+          "chance": 0.14285714285714285,
+          "LogReg": {
+            "before": 0.4822069748166525,
+            "after": 0.47784519236615886,
+            "pct_removed": 1.2853350848318852,
+            "residual_above_chance": 0.334988049509016
+          },
+          "MLP": {
+            "before": 0.4966193014931107,
+            "after": 0.5097535159860802,
+            "pct_removed": -3.712724544539271,
+            "residual_above_chance": 0.36689637312893736
+          }
+        }
+      },
+      "final_lambda": 49.99546021312976,
+      "final_recon": 229.38862387339273
+    },
+    {
+      "seed": 1,
+      "lambda_max": 50.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.7462441980133709,
+            "after": 0.724485180624096,
+            "pct_removed": 8.836357390273816,
+            "residual_above_chance": 0.22448518062409595
+          },
+          "MLP": {
+            "before": 0.7503633481506546,
+            "after": 0.7568957506439095,
+            "pct_removed": -2.609168850595489,
+            "residual_above_chance": 0.25689575064390946
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.41671262038678447,
+            "after": 0.4087550557104316,
+            "pct_removed": 3.671943360820604,
+            "residual_above_chance": 0.20875505571043157
+          },
+          "MLP": {
+            "before": 0.4378503442127718,
+            "after": 0.37661375162738847,
+            "pct_removed": 25.745849890636872,
+            "residual_above_chance": 0.17661375162738846
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.49543480853649124,
+            "after": 0.4964246120485338,
+            "pct_removed": -0.4032857107533575,
+            "residual_above_chance": 0.24642461204853378
+          },
+          "MLP": {
+            "before": 0.5021043186189035,
+            "after": 0.511468435225044,
+            "pct_removed": -3.7143816724123395,
+            "residual_above_chance": 0.26146843522504404
+          }
+        },
+        "emotion": {
+          "chance": 0.14285714285714285,
+          "LogReg": {
+            "before": 0.4822069748166525,
+            "after": 0.47893159934925655,
+            "pct_removed": 0.9651914216320384,
+            "residual_above_chance": 0.3360744564921137
+          },
+          "MLP": {
+            "before": 0.5066935790343491,
+            "after": 0.4803985383752537,
+            "pct_removed": 7.227159801633612,
+            "residual_above_chance": 0.33754139551811085
+          }
+        }
+      },
+      "final_lambda": 49.99546021312976,
+      "final_recon": 228.9530585606893
+    },
+    {
+      "seed": 7,
+      "lambda_max": 50.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.7462441980133709,
+            "after": 0.7265677107089827,
+            "pct_removed": 7.990639967614498,
+            "residual_above_chance": 0.22656771070898274
+          },
+          "MLP": {
+            "before": 0.7519867779106428,
+            "after": 0.7463923428867293,
+            "pct_removed": 2.2201303855305428,
+            "residual_above_chance": 0.2463923428867293
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.41671262038678447,
+            "after": 0.4101939630140722,
+            "pct_removed": 3.007973121767397,
+            "residual_above_chance": 0.21019396301407217
+          },
+          "MLP": {
+            "before": 0.4437331373107892,
+            "after": 0.40775369316215276,
+            "pct_removed": 14.76181882595567,
+            "residual_above_chance": 0.20775369316215275
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.49543480853649124,
+            "after": 0.4953274332118673,
+            "pct_removed": 0.043749020468706226,
+            "residual_above_chance": 0.24532743321186729
+          },
+          "MLP": {
+            "before": 0.5031140221181557,
+            "after": 0.5144506846712111,
+            "pct_removed": -4.478875748639237,
+            "residual_above_chance": 0.26445068467121113
+          }
+        },
+        "emotion": {
+          "chance": 0.14285714285714285,
+          "LogReg": {
+            "before": 0.4822069748166525,
+            "after": 0.4789833007585676,
+            "pct_removed": 0.9499559906867792,
+            "residual_above_chance": 0.33612615790142475
+          },
+          "MLP": {
+            "before": 0.5092794891013994,
+            "after": 0.4804788194626823,
+            "pct_removed": 7.8599654016512,
+            "residual_above_chance": 0.33762167660553943
+          }
+        }
+      },
+      "final_lambda": 49.99546021312976,
+      "final_recon": 228.3568836847941
+    },
+    {
+      "seed": 13,
+      "lambda_max": 50.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.7462441980133709,
+            "after": 0.7320473706516717,
+            "pct_removed": 5.765344920300769,
+            "residual_above_chance": 0.2320473706516717
+          },
+          "MLP": {
+            "before": 0.7579004576975183,
+            "after": 0.7563803255106323,
+            "pct_removed": 0.5894259360597859,
+            "residual_above_chance": 0.2563803255106323
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.41671262038678447,
+            "after": 0.4017053439595745,
+            "pct_removed": 6.924966529602777,
+            "residual_above_chance": 0.2017053439595745
+          },
+          "MLP": {
+            "before": 0.4186892000896137,
+            "after": 0.427023516581866,
+            "pct_removed": -3.811032501301891,
+            "residual_above_chance": 0.22702351658186598
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.49543480853649124,
+            "after": 0.5044552466842004,
+            "pct_removed": -3.6752888481863337,
+            "residual_above_chance": 0.2544552466842004
+          },
+          "MLP": {
+            "before": 0.5046853467168781,
+            "after": 0.4990980641263462,
+            "pct_removed": 2.193798215153324,
+            "residual_above_chance": 0.24909806412634622
+          }
+        },
+        "emotion": {
+          "chance": 0.14285714285714285,
+          "LogReg": {
+            "before": 0.4822069748166525,
+            "after": 0.4790059489524209,
+            "pct_removed": 0.9432819947921877,
+            "residual_above_chance": 0.33614880609527803
+          },
+          "MLP": {
+            "before": 0.4921694245522856,
+            "after": 0.49162930800415544,
+            "pct_removed": 0.15462283361725904,
+            "residual_above_chance": 0.3487721651470126
+          }
+        }
+      },
+      "final_lambda": 49.99546021312976,
+      "final_recon": 230.75548028945923
+    },
+    {
+      "seed": 99,
+      "lambda_max": 50.0,
+      "summary": {
+        "gender": {
+          "chance": 0.5,
+          "LogReg": {
+            "before": 0.7462441980133709,
+            "after": 0.7154477057098902,
+            "pct_removed": 12.50648443778093,
+            "residual_above_chance": 0.21544770570989025
+          },
+          "MLP": {
+            "before": 0.7573871580287083,
+            "after": 0.7330875729618815,
+            "pct_removed": 9.440869254291396,
+            "residual_above_chance": 0.23308757296188154
+          }
+        },
+        "race": {
+          "chance": 0.2,
+          "LogReg": {
+            "before": 0.41671262038678447,
+            "after": 0.40737984035543,
+            "pct_removed": 4.306523549342671,
+            "residual_above_chance": 0.20737984035543
+          },
+          "MLP": {
+            "before": 0.45612517493319116,
+            "after": 0.42923295392774,
+            "pct_removed": 10.499639878221975,
+            "residual_above_chance": 0.22923295392774
+          }
+        },
+        "age_bucket": {
+          "chance": 0.25,
+          "LogReg": {
+            "before": 0.49543480853649124,
+            "after": 0.4999420988949091,
+            "pct_removed": -1.8364511477791075,
+            "residual_above_chance": 0.2499420988949091
+          },
+          "MLP": {
+            "before": 0.5057493552127472,
+            "after": 0.5141181616031568,
+            "pct_removed": -3.2722688131307067,
+            "residual_above_chance": 0.2641181616031568
+          }
+        },
+        "emotion": {
+          "chance": 0.14285714285714285,
+          "LogReg": {
+            "before": 0.4822069748166525,
+            "after": 0.4671196761977262,
+            "pct_removed": 4.4459425636982335,
+            "residual_above_chance": 0.32426253334058336
+          },
+          "MLP": {
+            "before": 0.489420214101686,
+            "after": 0.4564036236248518,
+            "pct_removed": 9.526863424388603,
+            "residual_above_chance": 0.31354648076770897
+          }
+        }
+      },
+      "final_lambda": 49.99546021312976,
+      "final_recon": 232.9673277537028
+    }
+  ],
+  "aggregate": {
+    "1": {
+      "gender": {
+        "mean": 3.1072821638903743,
+        "std": 0.7746882723876148,
+        "min": 1.9977678860431174,
+        "max": 3.8747806512145426,
+        "n_positive": 5,
+        "n_negative": 0,
+        "values": [
+          3.7447034766944705,
+          2.7040860805339393,
+          3.8747806512145426,
+          3.215072724965802,
+          1.9977678860431174
+        ],
+        "t": 8.968890315477816,
+        "p": 0.0008551342384380131
+      },
+      "race": {
+        "mean": 5.068837549346836,
+        "std": 2.0176741050040183,
+        "min": 1.6980159236358607,
+        "max": 6.489091377666892,
+        "n_positive": 5,
+        "n_negative": 0,
+        "values": [
+          6.331677581563529,
+          6.145240209177749,
+          4.6801626546901485,
+          1.6980159236358607,
+          6.489091377666892
+        ],
+        "t": 5.617490604222429,
+        "p": 0.004936072760176425
+      },
+      "age_bucket": {
+        "mean": 3.167523325236504,
+        "std": 1.4714838201155422,
+        "min": 1.3963003379954935,
+        "max": 5.327876287048875,
+        "n_positive": 5,
+        "n_negative": 0,
+        "values": [
+          3.769757089641247,
+          2.635673771018719,
+          2.7080091404781865,
+          1.3963003379954935,
+          5.327876287048875
+        ],
+        "t": 4.813370951634963,
+        "p": 0.00856425231382572
+      },
+      "emotion": {
+        "mean": 0.40033871508236907,
+        "std": 1.364226965912926,
+        "min": -0.7115757552083971,
+        "max": 2.6813298073349823,
+        "n_positive": 3,
+        "n_negative": 2,
+        "values": [
+          2.6813298073349823,
+          -0.5843535346541491,
+          0.4045028491219312,
+          0.21179020881747762,
+          -0.7115757552083971
+        ],
+        "t": 0.6561844937217245,
+        "p": 0.5475345872261389
+      }
+    },
+    "5": {
+      "gender": {
+        "mean": 8.428586595404772,
+        "std": 1.0810069235344189,
+        "min": 7.424152577849965,
+        "max": 9.890957866906986,
+        "n_positive": 5,
+        "n_negative": 0,
+        "values": [
+          7.842350262355412,
+          7.726256168307977,
+          9.890957866906986,
+          9.25921610160352,
+          7.424152577849965
+        ],
+        "t": 17.434571575126927,
+        "p": 6.353902695031554e-05
+      },
+      "race": {
+        "mean": 16.100408095990772,
+        "std": 2.3536971669333786,
+        "min": 13.541580398028563,
+        "max": 18.519750151637087,
+        "n_positive": 5,
+        "n_negative": 0,
+        "values": [
+          13.666230674747137,
+          18.519750151637087,
+          13.541580398028563,
+          16.876526526320372,
+          17.897952729220705
+        ],
+        "t": 15.295768493034155,
+        "p": 0.00010655924993524486
+      },
+      "age_bucket": {
+        "mean": 10.080222047948709,
+        "std": 1.123488631496513,
+        "min": 8.21869015237693,
+        "max": 11.219725808601444,
+        "n_positive": 5,
+        "n_negative": 0,
+        "values": [
+          10.108544999095287,
+          8.21869015237693,
+          10.279221044889137,
+          10.574928234780746,
+          11.219725808601444
+        ],
+        "t": 20.062563247730928,
+        "p": 3.64289319369596e-05
+      },
+      "emotion": {
+        "mean": 0.330857945262644,
+        "std": 0.9295574153447189,
+        "min": -0.37909582428879246,
+        "max": 1.901272533097801,
+        "n_positive": 3,
+        "n_negative": 2,
+        "values": [
+          1.901272533097801,
+          -0.37909582428879246,
+          0.3471840663939402,
+          -0.3327325607354072,
+          0.11766151184567838
+        ],
+        "t": 0.7958850570072853,
+        "p": 0.47066042450870993
+      }
+    },
+    "20": {
+      "gender": {
+        "mean": 14.258167370568055,
+        "std": 4.061654615023885,
+        "min": 8.734246376699021,
+        "max": 18.43962632375322,
+        "n_positive": 5,
+        "n_negative": 0,
+        "values": [
+          18.43962632375322,
+          15.07117129014637,
+          11.591283189316258,
+          8.734246376699021,
+          17.454509672925404
+        ],
+        "t": 7.84956735543899,
+        "p": 0.0014229225214374
+      },
+      "race": {
+        "mean": 12.124535848625044,
+        "std": 6.038818041103786,
+        "min": 5.265968923972605,
+        "max": 21.161803106623378,
+        "n_positive": 5,
+        "n_negative": 0,
+        "values": [
+          21.161803106623378,
+          8.459005515613466,
+          11.724336132822359,
+          14.011565564093406,
+          5.265968923972605
+        ],
+        "t": 4.489502112602692,
+        "p": 0.010909978694928454
+      },
+      "age_bucket": {
+        "mean": 10.910375608089481,
+        "std": 4.981772897480216,
+        "min": 5.9205135118086725,
+        "max": 19.262913734921984,
+        "n_positive": 5,
+        "n_negative": 0,
+        "values": [
+          9.419036021609193,
+          5.9205135118086725,
+          10.537550216036134,
+          19.262913734921984,
+          9.411864556071423
+        ],
+        "t": 4.897120366944741,
+        "p": 0.00806065717075901
+      },
+      "emotion": {
+        "mean": 2.9967743066573886,
+        "std": 1.7571812634159825,
+        "min": 0.6413414410279425,
+        "max": 5.5573682004117035,
+        "n_positive": 5,
+        "n_negative": 0,
+        "values": [
+          2.6675743807278844,
+          2.8038687847690444,
+          5.5573682004117035,
+          3.313718726350369,
+          0.6413414410279425
+        ],
+        "t": 3.813488797327551,
+        "p": 0.018883486542077794
+      }
+    },
+    "50": {
+      "gender": {
+        "mean": 8.40790544675512,
+        "std": 2.563778838607869,
+        "min": 5.765344920300769,
+        "max": 12.50648443778093,
+        "n_positive": 5,
+        "n_negative": 0,
+        "values": [
+          6.940700517805586,
+          8.836357390273816,
+          7.990639967614498,
+          5.765344920300769,
+          12.50648443778093
+        ],
+        "t": 7.333178605040647,
+        "p": 0.0018406543796381167
+      },
+      "race": {
+        "mean": 4.174385264334193,
+        "std": 1.6332171042319965,
+        "min": 2.9605197601375113,
+        "max": 6.924966529602777,
+        "n_positive": 5,
+        "n_negative": 0,
+        "values": [
+          2.9605197601375113,
+          3.671943360820604,
+          3.007973121767397,
+          6.924966529602777,
+          4.306523549342671
+        ],
+        "t": 5.715228668091863,
+        "p": 0.004636568827424233
+      },
+      "age_bucket": {
+        "mean": -1.443570666218834,
+        "std": 1.4524670044164456,
+        "min": -3.6752888481863337,
+        "max": 0.043749020468706226,
+        "n_positive": 1,
+        "n_negative": 4,
+        "values": [
+          -1.3465766448440777,
+          -0.4032857107533575,
+          0.043749020468706226,
+          -3.6752888481863337,
+          -1.8364511477791075
+        ],
+        "t": -2.222372095321261,
+        "p": 0.09037359751501375
+      },
+      "emotion": {
+        "mean": 1.717941411128225,
+        "std": 1.5318020340427587,
+        "min": 0.9432819947921877,
+        "max": 4.4459425636982335,
+        "n_positive": 5,
+        "n_negative": 0,
+        "values": [
+          1.2853350848318852,
+          0.9651914216320384,
+          0.9499559906867792,
+          0.9432819947921877,
+          4.4459425636982335
+        ],
+        "t": 2.507787358465797,
+        "p": 0.06621353651464594
+      }
+    }
+  }
+}
