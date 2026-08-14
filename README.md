@@ -1,4 +1,4 @@
-# What the VAE encoded that we did not ask it to
+# Preserved Not Protected: How a “Private” VAE Latent Becomes a High-fidelity Proxy for Sensitive Attributes
 
 **Revisiting FedAR through a demographic lens.**
 
@@ -528,11 +528,6 @@ projection is the illustration.
 - **RAF-DB demographics are model-inferred.** FairFace mean race confidence is
   79.3% and the inferred composition matches RAF-DB's published skew, but these
   are predictions. All RAF-DB demographic results should be read as lower bounds.
-- **~~The debias sweep is single-seed.~~ Now five-seed.** The removal sweep
-  was repeated across seeds 42/1/7/13/99. The single-seed λ=50 negative-removal
-  result on RAF-DB did not survive: race is positive in all five seeds (+4.2% ±
-  1.6), and age is only a weak −1.4% ± 1.5 that spans zero. Both the removal and
-  federated experiments are now multi-seed.
 - **PCA was fitted on 32×32 RGB and 16×16 grayscale, not the 96×96 the VAE saw.**
   A PCA on the full input would likely retain more, which would strengthen rather
   than weaken the conclusion, so the control is conservative in the direction
