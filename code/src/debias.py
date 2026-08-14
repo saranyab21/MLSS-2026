@@ -16,6 +16,7 @@ targeted; on RAF-DB the emotion label is carried through untouched so the
 downstream task can be re-evaluated on the debiased latents.
 """
 
+from fedar_common.data import build_dataset
 import os
 import json
 import copy
@@ -30,8 +31,6 @@ from torch.utils.data import DataLoader, Subset
 from torchvision import transforms
 
 from model import VAE, vae_loss
-from utkface_dataset import UTKFaceDataset, collate_labels
-from rafdb_dataset import RAFDBDataset, collate_labels as collate_rafdb
 
 # Attributes the adversaries try to strip. Emotion is deliberately excluded:
 # it is the task we want to preserve, not remove.
@@ -78,16 +77,6 @@ class Adversary(nn.Module):
 # dataset construction
 # --------------------------------------------------------------------------
 
-def build_dataset(args, transform):
-    """Return (dataset, collate_fn) for whichever corpus was requested."""
-    if args.dataset == 'rafdb':
-        if not args.demographics:
-            raise ValueError("--demographics is required for --dataset rafdb")
-        ds = RAFDBDataset(args.data_root, args.demographics,
-                          transform=transform, split=None)
-        return ds, collate_rafdb
-    ds = UTKFaceDataset(args.data_root, transform=transform)
-    return ds, collate_labels
 
 
 # --------------------------------------------------------------------------

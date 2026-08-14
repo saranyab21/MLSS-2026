@@ -10,6 +10,7 @@ RAF-DB:  the dataset's own train/test split is reused, and the emotion label
          is saved alongside the demographic attributes.
 """
 
+from fedar_common.data import build_dataset
 import os
 import argparse
 
@@ -20,26 +21,8 @@ from torchvision import transforms
 from sklearn.model_selection import train_test_split
 
 from model import VAE
-from utkface_dataset import UTKFaceDataset, collate_labels
-from rafdb_dataset import RAFDBDataset, collate_labels as collate_rafdb
 
 
-def build_dataset(args, transform):
-    """Return (dataset, collate_fn) for whichever corpus was requested."""
-    if args.dataset == 'rafdb':
-        if not args.demographics:
-            raise ValueError(
-                "--demographics is required for --dataset rafdb. "
-                "Run annotate_demographics.py first."
-            )
-        # split=None: extract over train AND test, the split array is
-        # recorded per-sample below.
-        ds = RAFDBDataset(args.data_root, args.demographics,
-                          transform=transform, split=None)
-        return ds, collate_rafdb
-
-    ds = UTKFaceDataset(args.data_root, transform=transform)
-    return ds, collate_labels
 
 
 def make_split(args, ds, labels):

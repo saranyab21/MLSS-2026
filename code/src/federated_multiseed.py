@@ -15,6 +15,7 @@ The claim this supports is a null: no intervention produces an effect large
 or consistent enough to matter against the gap's own magnitude.
 """
 
+from fedar_common.stats import paired_stats
 import os
 import json
 import argparse
@@ -60,29 +61,6 @@ def prepare_data(d, task, seed, skew, n_classes):
     return data
 
 
-def paired_stats(deltas):
-    """Mean, std, and sign consistency of a paired difference across seeds."""
-    a = np.asarray(deltas, dtype=float)
-    out = {
-        'mean': float(a.mean()),
-        'std': float(a.std(ddof=1)) if len(a) > 1 else 0.0,
-        'min': float(a.min()),
-        'max': float(a.max()),
-        'n_positive': int((a > 0).sum()),
-        'n_negative': int((a < 0).sum()),
-        'values': a.tolist(),
-    }
-    # A paired t-test against zero. With five seeds this is weak, but it is the
-    # honest summary of "could this be zero?".
-    try:
-        from scipy import stats
-        if len(a) > 1 and a.std(ddof=1) > 0:
-            t, p = stats.ttest_1samp(a, 0.0)
-            out['t'] = float(t)
-            out['p'] = float(p)
-    except ImportError:
-        pass
-    return out
 
 
 def main():

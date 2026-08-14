@@ -35,6 +35,24 @@ This project asks three questions, on two corpora:
 
 Plus two controls that could have invalidated the framing, one of which did.
 
+This is not a claim that latents contain demographic information — that is established 
+(see Positioning below). It is an audit of what a deployed federated privacy method inherited 
+without checking: an attribute proxy that survives compression, survives resampling, and 
+survives adversarial removal.
+
+---
+
+## Why this isn't obvious (positioning)
+
+A reasonable reaction is: of course a face latent encodes race — reconstruction preserves appearance, so a probe will read it off. That intuition is correct, and it is exactly the point. The leakage is not the contribution; the contribution is the gap between what is known and what a shipped privacy method actually verified. Three lines of prior work set that gap up:
+
+Invertibility ≠ attribute privacy. Kaushik et al. (FG 2025) show that purpose-built irreversible face templates — encodings designed so the image cannot be reconstructed — still leak age, gender and ethnicity to attribute inference, and that leakage persists across compression dimensions. So "you can't invert it" is a known-insufficient privacy guarantee. FedAR's privacy check (similarity 0.06) measures precisely the property Kaushik et al. show is not enough.
+The proxy is something others build on purpose. Grari, Lamprier & Detyniecki (2021) deliberately train a VAE latent to hold as much sensitive information as possible, to use it as a proxy for fairness when demographic labels are missing. One line of research constructs the exact object our privacy step produces by accident — and at task-level fidelity.
+Federated training leaks attribute distributions. Even when a sensitive attribute is never used in training, it can be inferred from the shared model (federated attribute-inference literature). So the federated setting does not neutralise the leak; it carries it.
+
+Put together: the fairness-without-demographics field assumes the sensitive attribute is missing and hunts for a weak proxy. Here the privacy step supplies a near-perfect proxy for free, and — our new result — standard interventions do not remove it. The obvious fact (leakage exists) is the setup. The non-obvious facts (a deployed privacy claim never measured it; and once present it is irremovable by the standard fixes) are the contribution.
+
+
 ---
 
 ## Headline result
@@ -187,7 +205,7 @@ Indian/Male 2/5, Black/Male 2/5, Other/Female 1/5 under demographic balancing. S
 the interventions relocate who absorbs the disparity on RAF-DB, modally rather
 than universally, and not at all on UTKFace.
 
-### Experiments C and D — can it be removed?
+### Experiments C and D — can it be removed? (five seeds)
 
 Gradient reversal layer feeding demographic adversaries, fine-tuned for 20
 epochs, sweeping λ ∈ {1, 5, 20, 50}. The encoder is then **frozen and a fresh
@@ -195,25 +213,38 @@ probe trained from scratch** — the check from Elazar & Goldberg (2018), which
 showed that adversarially removed attributes are often recoverable by a newly
 initialised probe: the adversary was defeated, the information was not.
 
-Above-chance signal removed, measured on the deterministic linear probe:
+Above-chance signal removed, measured on the deterministic linear (LogReg)
+probe, **mean ± std over seeds 42/1/7/13/99**. Every cell that matters is
+sign-consistent across all five seeds unless noted.
 
 | λ | UTKFace gender / race / age | RAF-DB gender / race / age | RAF-DB emotion (task) |
 |---|---|---|---|
-| 1 | 0.1% / 4.6% / 2.4% | 3.9% / 8.2% / 4.5% | 1.1% |
-| 5 | 5.6% / 11.7% / 9.3% | 6.6% / **18.2%** / 8.0% | 2.5% |
-| 20 | 15.3% / **21.3%** / 10.7% | 18.0% / 2.7% / 13.5% | 1.1% |
-| 50 | 6.7% / 14.3% / 6.0% | 12.3% / **−1.7%** / **−6.6%** | 2.4% |
+| 1  | 0.1±1.0 / 3.3±0.9 / 2.4±0.8      | 3.1±0.8 / 5.1±2.0 / 3.2±1.5       | 0.4±1.4 |
+| 5  | 7.1±0.4 / 11.6±1.3 / 8.5±1.6     | 8.4±1.1 / **16.1±2.4** / 10.1±1.1 | 0.3±0.9 |
+| 20 | 16.8±2.6 / **19.4±1.7** / 12.9±1.8 | 14.3±4.1 / 12.1±6.0 / 10.9±5.0  | 3.0±1.8 |
+| 50 | 10.1±2.2 / 11.2±2.1 / 8.1±2.3    | 8.4±2.6 / 4.2±1.6 / −1.4±1.5 *(1+/4−)* | 1.7±1.5 |
 
-Removal peaks around 20% and then declines. At λ=50 on RAF-DB, race and age
-became *more* linearly recoverable than before debiasing, while reconstruction
-loss rose by 17.6. Full utility cost, negative invariance benefit.
+Removal peaks below ~20% and declines with λ, on both corpora. Every
+demographic target at every λ is removed *positively* (signal reduced, not
+increased) and sign-consistent across all five seeds — with one exception:
+RAF-DB age at λ=50 sits at −1.4% ± 1.5 with signs split 1+/4−, spanning zero.
+
+**What the five seeds corrected.** The earlier single-seed run reported, at
+λ=50 on RAF-DB, race *and* age coming back more recoverable than before
+(−1.7% and −6.6%). Across five seeds that dissolves: **race is +4.2% ± 1.6,
+positive in every seed** — the negative sign was noise — and age is only a
+weak −1.4% that spans zero rather than a −6.6% collapse. The dramatic
+negative-removal artefact does not survive replication. (This is the same
+lesson the federated sweep taught: a single-seed point estimate at this scale
+cannot separate a real effect from seed noise.)
 
 The RAF-DB runs track **emotion accuracy** as the utility axis. It moves by
-1.1–2.5% across every λ. So this is not adversarial pressure destroying the
+0.3–3.0% across every λ. So this is not adversarial pressure destroying the
 representation wholesale: the task signal survives and the demographic signal
 survives. The intervention does not reach what it is aimed at.
 
-This sweep is **single-seed** and should be read accordingly.
+Both the removal sweep and the federated experiment are now five-seed; the
+worst-remaining single-seed dependency has been closed.
 
 ---
 
@@ -237,16 +268,26 @@ This sweep is **single-seed** and should be read accordingly.
                         extract_latents.py
                      frozen encoder → cached μ
                                   │
-     ┌──────────┬──────────┬──────┴──────┬────────────────┬──────────────┐
-     ▼          ▼          ▼             ▼                ▼              ▼
- probes.py  federated  federated_    debias.py     pixel_baseline   visualize.py
- (Exp. A)     .py      multiseed.py  (Exp. C+D)    .py (control)    tradeoff_figure.py
-            (Exp. B)   (control)                                    cross_dataset.py
-                                                                    control_figures.py
+     ┌──────────┬───────────────┬─┴────────────┬───────────────┐
+     ▼          ▼               ▼              ▼               ▼
+ probes.py  federated_    debias_        pixel_          figures/
+ (Exp. A)   multiseed.py  multiseed.py   baseline.py     (visualize, cross_dataset,
+            (Exp. B,      (Exp. C/D,     (control)        control_figures, tradeoff,
+             5 seeds)      5 seeds)                        make_*_panels)
+
+ shared building blocks used by all of the above:
+     fedar_common/  data.py · probing.py · stats.py · plotting.py
 ```
 
 Everything after `extract_latents.py` runs on cached 128-dimensional vectors, so
 the GPU is needed only twice: once to train the VAE, once to extract.
+
+`federated.py` and `debias.py` are the single-seed *engines*; the
+`*_multiseed.py` drivers import them unchanged and run the same pipeline across
+seeds `42,1,7,13,99`. A one-seed slice of a multiseed run is bit-identical to
+calling the engine directly, so there is one implementation of each experiment,
+not two. `fedar_common/` holds the pieces that were previously copy-pasted across
+scripts (one `build_dataset`, one probe suite, one `paired_stats`, one palette).
 
 ---
 
@@ -254,13 +295,26 @@ the GPU is needed only twice: once to train the VAE, once to extract.
 
 All scripts live in `code/src/` and are run from that directory.
 
+**Shared building blocks** (`code/src/fedar_common/`)
+
+One definition of each cross-cutting piece, imported by the scripts below.
+These were previously copy-pasted; centralising them means the PCA control
+provably uses the *same* probe suite and the *same* split as the leakage probe.
+
+| file | what it does |
+|---|---|
+| `fedar_common/data.py` | The single `build_dataset(args, transform, rafdb_split=...)`. `train.py` passes `rafdb_split='train'` to hold out the RAF-DB test split; downstream scripts pass `None` to read all rows. Re-exports `age_to_bucket`. |
+| `fedar_common/probing.py` | The probe suite: `make_probes` (LogReg/LinearSVM/MLP), `make_baselines`, `evaluate` (balanced acc / macro-F1 / AUROC). Used by Experiment A and the PCA control. |
+| `fedar_common/stats.py` | `paired_stats` — per-seed mean/std/sign-consistency + optional paired *t*-test, used by both multiseed drivers. |
+| `fedar_common/plotting.py` | The Okabe-Ito palette (`CB`, `OI`) and `load_json`, previously redefined in eight figure files. |
+
 **Data**
 
 | file | what it does |
 |---|---|
-| `utkface_dataset.py` | Parses UTKFace filenames (`age_gender_race_timestamp.jpg`) into labels. Run standalone for the composition report. |
+| `utkface_dataset.py` | Parses UTKFace filenames (`age_gender_race_timestamp.jpg`) into labels. Owns `age_to_bucket`. Run standalone for the composition report. |
 | `rafdb_dataset.py` | Joins RAF-DB emotion labels to the FairFace demographics CSV. Tolerates the three folder layouts the public mirrors use. |
-| `annotate_demographics.py` | Runs the FairFace ResNet-34 over RAF-DB and writes `data/rafdb_demographics.csv`. GPU-batched, ~13 s for 15k images. |
+| `annotate_demographics.py` | Runs the FairFace ResNet-34 over RAF-DB and writes `data/rafdb_demographics.csv`. GPU-batched, ~13 s for 15k images. Keeps a local age-bucket variant that clamps out-of-range ages (FairFace needs a valid bucket for every prediction). |
 
 **Model and representation**
 
@@ -275,19 +329,22 @@ All scripts live in `code/src/` and are run from that directory.
 | file | what it does |
 |---|---|
 | `probes.py` | Experiment A. Three probe families × all targets, with stratified/majority/shuffled-null controls and 5-fold CV. |
-| `federated.py` | Experiment B, single seed. FedAvg simulation, three conditions, subgroup breakdown by race × gender. |
-| `federated_multiseed.py` | Experiment B across seeds, with paired within-seed differences. **This is the version to cite.** |
-| `debias.py` | Experiments C and D. GRL adversarial removal with the fresh-probe recovery check. |
-| `pixel_baseline.py` | The control that changed the framing. Runs the identical probe suite on raw pixels and on dimension-matched PCA. |
+| `federated.py` | Experiment B engine: one FedAvg run (single seed), three conditions, subgroup breakdown by race × gender. Not run directly for the headline numbers — `federated_multiseed.py` drives it. |
+| `federated_multiseed.py` | Experiment B, the version behind the reported numbers. Runs `federated.py` across seeds `42,1,7,13,99` with paired within-seed differences. Pass `--seeds 42` to reproduce a single-seed run. |
+| `debias.py` | Experiments C/D engine: GRL adversarial removal with the Elazar-Goldberg fresh-probe recovery check (`fresh_probe` lives here, co-located with the removal loop). |
+| `debias_multiseed.py` | Experiments C/D across seeds; drives `debias.py` unchanged. Now the five-seed result behind the reported removal numbers. Pass `--seeds 42` to reproduce a single-seed slice. |
+| `pixel_baseline.py` | The control that changed the framing. Runs the identical probe suite (from `fedar_common`) on raw pixels and on dimension-matched PCA. |
+| `inversion_check.py` | *Optional.* Reconstruction fidelity of our **own** decoder — a weaker threat model than FedAR's external-decoder check, so its number is not a poster claim. See its header before using it. |
 
-**Figures**
+**Figures** (run from `code/src/`; write to `../../figures/`)
 
 | file | what it does |
 |---|---|
 | `visualize.py` | Per-dataset: probe performance, composition, LDA projection, UMAP. |
 | `tradeoff_figure.py` | Per-dataset: removal against λ and against utility cost. |
-| `cross_dataset.py` | Both datasets together. Leakage, task-vs-demographic AUROC, federated conditions, worst group, removal ceiling. |
+| `cross_dataset.py` | Both datasets together. Leakage, task-vs-demographic AUROC, federated conditions, worst group, removal ceiling (incl. `figX5_removal_cross.png`). |
 | `control_figures.py` | The two control figures: PCA comparison and per-seed paired differences. |
+| `make_lda_panels.py`, `make_umap_panels.py`, `make_umap_panels_isolated.py` | Laptop-only projection panels (UMAP is cut from the wall; LDA replaced it). |
 
 ---
 
@@ -327,6 +384,10 @@ mkdir -p weights   # place the .pt file here
 
 ### Run
 
+The `*_multiseed.py` drivers are the entrypoints for Experiments B and C/D —
+they run the underlying engine across seeds `42,1,7,13,99`. The single-seed
+`federated.py` / `debias.py` calls below are optional and reproduce one slice.
+
 ```bash
 cd code/src
 
@@ -336,12 +397,23 @@ python train.py --data_root ../../data/utkface --epochs 50
 python extract_latents.py --data_root ../../data/utkface
 
 python probes.py
-python federated.py --skew 0.05,1.0,0.5,0.15 \
-    --output ../../results/federated_skewed.json
-python federated_multiseed.py --skew 0.05,1.0,0.5,0.15 \
-    --output ../../results/federated_multiseed_utkface.json
 python pixel_baseline.py --data_root ../../data/utkface \
     --output ../../results/pixel_baseline_utkface.json
+
+# Experiment B (headline): five-seed federated sweep
+python federated_multiseed.py --skew 0.05,1.0,0.5,0.15 \
+    --output ../../results/federated_multiseed_utkface.json
+
+# Experiments C/D (headline): five-seed removal sweep, all lambdas
+python debias_multiseed.py \
+    --data_root ../../data/utkface \
+    --checkpoint ../../checkpoints/vae_best.pt \
+    --reference_latents ../../latents/utkface_latents.npz \
+    --output ../../results/debias_multiseed_utkface.json
+
+# --- optional single-seed slices (the engines, called directly) ---
+python federated.py --skew 0.05,1.0,0.5,0.15 \
+    --output ../../results/federated_skewed.json
 for lam in 1 5 20 50; do
   out=../../results/debias_lam${lam}.json
   [ $lam -eq 1 ] && out=../../results/debias_results.json
@@ -369,15 +441,27 @@ python extract_latents.py --dataset rafdb \
 
 python probes.py --latents ../../latents/rafdb_latents.npz \
     --output ../../results/probe_results_rafdb.json
-python federated.py --latents ../../latents/rafdb_latents.npz \
-    --output ../../results/federated_rafdb.json
-python federated_multiseed.py --latents ../../latents/rafdb_latents.npz \
-    --output ../../results/federated_multiseed_rafdb.json
 python pixel_baseline.py --dataset rafdb \
     --data_root ../../data/rafdb_raw \
     --demographics ../../data/rafdb_demographics.csv \
     --latents ../../latents/rafdb_latents.npz \
     --output ../../results/pixel_baseline_rafdb.json
+
+# Experiment B (headline): five-seed federated sweep
+python federated_multiseed.py --latents ../../latents/rafdb_latents.npz \
+    --output ../../results/federated_multiseed_rafdb.json
+
+# Experiments C/D (headline): five-seed removal sweep
+python debias_multiseed.py --dataset rafdb \
+    --data_root ../../data/rafdb_raw \
+    --demographics ../../data/rafdb_demographics.csv \
+    --checkpoint ../../checkpoints/rafdb/vae_best.pt \
+    --reference_latents ../../latents/rafdb_latents.npz \
+    --output ../../results/debias_multiseed_rafdb.json
+
+# --- optional single-seed slices (the engines, called directly) ---
+python federated.py --latents ../../latents/rafdb_latents.npz \
+    --output ../../results/federated_rafdb.json
 for lam in 1 5 20 50; do
   python debias.py --dataset rafdb \
     --data_root ../../data/rafdb_raw \
@@ -444,9 +528,11 @@ projection is the illustration.
 - **RAF-DB demographics are model-inferred.** FairFace mean race confidence is
   79.3% and the inferred composition matches RAF-DB's published skew, but these
   are predictions. All RAF-DB demographic results should be read as lower bounds.
-- **The debias sweep is single-seed.** The negative removal at λ=50 in
-  particular could be noise. The federated experiment was repeated across five
-  seeds; this one was not.
+- **~~The debias sweep is single-seed.~~ Now five-seed.** The removal sweep
+  was repeated across seeds 42/1/7/13/99. The single-seed λ=50 negative-removal
+  result on RAF-DB did not survive: race is positive in all five seeds (+4.2% ±
+  1.6), and age is only a weak −1.4% ± 1.5 that spans zero. Both the removal and
+  federated experiments are now multi-seed.
 - **PCA was fitted on 32×32 RGB and 16×16 grayscale, not the 96×96 the VAE saw.**
   A PCA on the full input would likely retain more, which would strengthen rather
   than weaken the conclusion, so the control is conservative in the direction
@@ -496,6 +582,12 @@ Recognition. *ECCV Workshops*, 2020.
 
 Zhang, Dullerud, Roth, Oakden-Rayner, Pfohl & Ghassemi. Improving the Fairness of
 Chest X-ray Classifiers. *CHIL*, 2022. (Leveling-down)
+
+Kaushik, Yalavarthi, Ross, Boddeti & Ratha. Shielding Latent Face Representations From Privacy Attacks. IEEE FG 2025. arXiv:2505.12688. — irreversible/compressed face templates still leak age/gender/ethnicity.
+
+Grari, Lamprier & Detyniecki. Fairness without the Sensitive Attribute via Causal Variational Autoencoder. 2021. arXiv:2109.04999. — deliberately builds a VAE latent as a sensitive-attribute proxy.
+
+Wang, Yin, Yap & Zhang. AI Fairness Beyond Complete Demographics: Current Achievements and Future Directions. ECAI 2025. — survey of the fairness-without-demographics regime this work speaks to.
 
 ---
 

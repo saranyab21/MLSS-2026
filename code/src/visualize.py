@@ -22,17 +22,8 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 
-# Colourblind-safe palette (Okabe-Ito)
-CB = {
-    'blue':   '#0072B2',
-    'orange': '#E69F00',
-    'green':  '#009E73',
-    'red':    '#D55E00',
-    'purple': '#CC79A7',
-    'yellow': '#F0E442',
-    'sky':    '#56B4E9',
-    'grey':   '#999999',
-}
+# Colourblind-safe palette (Okabe-Ito) — single definition in fedar_common.
+from fedar_common.plotting import CB
 
 TARGET_LABELS = {
     'emotion': 'Emotion\n(7 classes)',

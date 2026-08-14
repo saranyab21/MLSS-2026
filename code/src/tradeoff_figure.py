@@ -15,6 +15,7 @@ reconstruction on its own. Anchoring to lambda=1 isolates the cost attributable
 to adversarial pressure rather than to the extra epochs.
 """
 
+from fedar_common.plotting import CB, load_json
 import os
 import json
 import argparse
@@ -24,8 +25,6 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-CB = {'blue': '#0072B2', 'orange': '#E69F00', 'green': '#009E73',
-      'red': '#D55E00', 'purple': '#CC79A7', 'grey': '#999999'}
 
 ATTR_STYLE = {
     'gender':     (CB['blue'],   'o', 'Gender'),

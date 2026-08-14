@@ -11,6 +11,7 @@ Same split, same probes, same metric as probes.py. Sample order is verified
 against the cached filenames before anything is computed.
 """
 
+from fedar_common.data import build_dataset
 import os
 import json
 import argparse
@@ -23,21 +24,13 @@ from torchvision import transforms
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
-from probes import make_probes, evaluate, TARGETS_COMMON, TARGET_EMOTION
-from utkface_dataset import UTKFaceDataset, collate_labels
-from rafdb_dataset import RAFDBDataset, collate_labels as collate_rafdb
+from fedar_common.probing import make_probes, evaluate
+from probes import TARGETS_COMMON, TARGET_EMOTION  # target definitions only
 
 warnings.filterwarnings('ignore', category=UserWarning)
 warnings.filterwarnings('ignore', category=FutureWarning)
 
 
-def build_dataset(args, transform):
-    if args.dataset == 'rafdb':
-        if not args.demographics:
-            raise ValueError("--demographics is required for --dataset rafdb")
-        return RAFDBDataset(args.data_root, args.demographics,
-                            transform=transform, split=None), collate_rafdb
-    return UTKFaceDataset(args.data_root, transform=transform), collate_labels
 
 
 def flatten_images(args, size, grayscale):

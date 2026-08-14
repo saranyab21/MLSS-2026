@@ -55,6 +55,7 @@ hours on the RTX 2080, the same order as the eight original debias runs plus
 the federated multi-seed sweep. Use --seeds / --lambdas to trim while testing.
 """
 
+from fedar_common.stats import paired_stats
 import os
 import json
 import time
@@ -69,10 +70,10 @@ from torchvision import transforms
 from model import VAE
 # Reuse debias.py's own components unchanged. If any of these move, this import
 # breaks loudly rather than silently diverging from the single-seed pipeline.
+from fedar_common.data import build_dataset
 from debias import (
     ATTRS,
     Adversary,
-    build_dataset,
     train_debiased,
     evaluate_from_saved,
     evaluate_encoder,
@@ -158,28 +159,6 @@ def run_single(args, seed, lambda_max, ref, ds, collate, split,
     }
 
 
-def paired_stats(vals):
-    """Mean, std, sign consistency of a per-seed quantity. Same shape as
-    federated_multiseed.paired_stats so downstream reporting is consistent."""
-    a = np.asarray(vals, dtype=float)
-    out = {
-        'mean': float(a.mean()),
-        'std': float(a.std(ddof=1)) if len(a) > 1 else 0.0,
-        'min': float(a.min()),
-        'max': float(a.max()),
-        'n_positive': int((a > 0).sum()),
-        'n_negative': int((a < 0).sum()),
-        'values': a.tolist(),
-    }
-    try:
-        from scipy import stats
-        if len(a) > 1 and a.std(ddof=1) > 0:
-            t, p = stats.ttest_1samp(a, 0.0)
-            out['t'] = float(t)
-            out['p'] = float(p)
-    except ImportError:
-        pass
-    return out
 
 
 def main():

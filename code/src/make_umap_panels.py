@@ -27,6 +27,7 @@ Outputs: <out_dir>/umap_<attr>.png  (square, transparent bg)
 # producing the "Segmentation fault" seen on the CIP pool. We never use TF here,
 # so we stop it initialising before numba/umap load. These env vars must be set
 # BEFORE numpy/numba/umap are imported, so this block stays at the very top.
+from fedar_common.plotting import OI
 import os
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "-1")   # hide GPU from TF entirely
 os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "3")    # silence TF logging
@@ -48,8 +49,6 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-OI = ["#0072B2", "#E69F00", "#009E73", "#CC79A7", "#999999",
-      "#56B4E9", "#D55E00", "#F0E442"]
 
 CLASS_NAMES = {
     "gender":     ["Male", "Female"],
