@@ -11,6 +11,7 @@ extract_latents.py. RAF-DB trains only on its native train split, so the
 official test images are never seen by the encoder.
 """
 
+from fedar_common.data import build_dataset
 import os
 import argparse
 import time
@@ -22,8 +23,6 @@ from torch.utils.data import DataLoader
 from torchvision import transforms
 
 from model import VAE, vae_loss
-from utkface_dataset import UTKFaceDataset, collate_labels
-from rafdb_dataset import RAFDBDataset, collate_labels as collate_rafdb
 
 
 def save_recon_grid(model, loader, device, epoch, out_dir, n=8):
@@ -47,24 +46,6 @@ def save_recon_grid(model, loader, device, epoch, out_dir, n=8):
     model.train()
 
 
-def build_dataset(args, transform):
-    """Return (dataset, collate_fn) for whichever corpus was requested."""
-    if args.dataset == 'rafdb':
-        if not args.demographics:
-            raise ValueError(
-                "--demographics is required for --dataset rafdb. "
-                "Run annotate_demographics.py first."
-            )
-        ds = RAFDBDataset(
-            args.data_root,
-            args.demographics,
-            transform=transform,
-            split='train',          # hold out the official test split entirely
-        )
-        return ds, collate_rafdb
-
-    ds = UTKFaceDataset(args.data_root, transform=transform)
-    return ds, collate_labels
 
 
 def train_one_epoch(model, loader, optimizer, device, beta):
@@ -142,7 +123,10 @@ def main():
         transforms.ToTensor(),
     ])
 
-    train_ds, collate = build_dataset(args, train_tf)
+    # rafdb_split='train' holds out the official RAF-DB test split during VAE
+    # training (no-op for UTKFace). This was the one behavioural difference
+    # between train.py's old private build_dataset and the downstream copies.
+    train_ds, collate = build_dataset(args, train_tf, rafdb_split='train')
     train_loader = DataLoader(
         train_ds,
         batch_size=args.batch_size,

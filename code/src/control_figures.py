@@ -9,6 +9,7 @@ they do more work than another result panel, because they show the claim
 survived a test designed to break it.
 """
 
+from fedar_common.plotting import CB, load_json
 import os
 import json
 import argparse
@@ -18,9 +19,6 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-CB = {'blue': '#0072B2', 'orange': '#E69F00', 'green': '#009E73',
-      'red': '#D55E00', 'purple': '#CC79A7', 'sky': '#56B4E9',
-      'grey': '#999999'}
 
 DS_LABEL = {'utkface': 'UTKFace', 'rafdb': 'RAF-DB'}
 DEMO = ['gender', 'race', 'age_bucket']

@@ -30,6 +30,7 @@ Outputs: <out_dir>/lda_<attr>.png  (square, ~600x600, transparent bg)
 # native init has been segfaulting other scripts on the CIP pool, so hide the GPU
 # from TF in case anything imports it transitively. Harmless for this sklearn-only
 # script. Must run before other imports.
+from fedar_common.plotting import OI
 import os
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "-1")
 os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "3")
@@ -42,8 +43,6 @@ import matplotlib.pyplot as plt
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
 # Okabe-Ito, matching the repo palette
-OI = ["#0072B2", "#E69F00", "#009E73", "#CC79A7", "#999999",
-      "#56B4E9", "#D55E00", "#F0E442"]
 
 CLASS_NAMES = {
     "gender":     ["Male", "Female"],

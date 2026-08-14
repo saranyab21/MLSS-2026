@@ -22,12 +22,9 @@ import argparse
 import warnings
 
 import numpy as np
+from fedar_common.probing import make_probes, make_baselines, evaluate
 from sklearn.linear_model import LogisticRegression
-from sklearn.svm import LinearSVC
-from sklearn.neural_network import MLPClassifier
-from sklearn.dummy import DummyClassifier
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import balanced_accuracy_score, f1_score, roc_auc_score
 from sklearn.model_selection import cross_val_score, StratifiedKFold
 
 warnings.filterwarnings('ignore', category=UserWarning)
@@ -48,43 +45,10 @@ TARGET_EMOTION = {
 }
 
 
-def make_probes(seed):
-    return {
-        'LogReg': LogisticRegression(max_iter=2000, C=1.0, random_state=seed),
-        'LinearSVM': LinearSVC(max_iter=5000, C=1.0, random_state=seed, dual='auto'),
-        'MLP': MLPClassifier(hidden_layer_sizes=(128,), max_iter=500,
-                             early_stopping=True, random_state=seed),
-    }
 
 
-def make_baselines(seed):
-    return {
-        'Stratified': DummyClassifier(strategy='stratified', random_state=seed),
-        'Majority': DummyClassifier(strategy='most_frequent'),
-    }
 
 
-def evaluate(clf, X_tr, y_tr, X_te, y_te, n_classes):
-    """Fit and return balanced accuracy, macro-F1, and AUROC where available."""
-    clf.fit(X_tr, y_tr)
-    y_pred = clf.predict(X_te)
-
-    bal_acc = balanced_accuracy_score(y_te, y_pred)
-    macro_f1 = f1_score(y_te, y_pred, average='macro', zero_division=0)
-
-    auroc = None
-    if hasattr(clf, 'predict_proba'):
-        try:
-            proba = clf.predict_proba(X_te)
-            if n_classes == 2:
-                auroc = roc_auc_score(y_te, proba[:, 1])
-            else:
-                auroc = roc_auc_score(y_te, proba, multi_class='ovr',
-                                      average='macro')
-        except Exception:
-            pass
-
-    return {'balanced_accuracy': bal_acc, 'macro_f1': macro_f1, 'auroc': auroc}
 
 
 def main():

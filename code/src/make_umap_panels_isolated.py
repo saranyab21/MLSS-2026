@@ -18,6 +18,7 @@ Run from code/src/ :
         --attrs gender race age_bucket \
         --out_dir ../../figures/umap_panels
 """
+from fedar_common.plotting import OI
 import argparse
 import os
 import subprocess
@@ -28,8 +29,6 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-OI = ["#0072B2", "#E69F00", "#009E73", "#CC79A7", "#999999",
-      "#56B4E9", "#D55E00", "#F0E442"]
 CLASS_NAMES = {
     "gender":     ["Male", "Female"],
     "race":       ["White", "Black", "Asian", "Indian", "Other"],
