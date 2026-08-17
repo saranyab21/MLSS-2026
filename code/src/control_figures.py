@@ -19,6 +19,10 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
+from fedar_common.plotting import apply_poster_style
+apply_poster_style()
+from fedar_common.plotting import CB, POSTER, load_json
+
 
 DS_LABEL = {'utkface': 'UTKFace', 'rafdb': 'RAF-DB'}
 DEMO = ['gender', 'race', 'age_bucket']
@@ -30,9 +34,9 @@ COND_SHORT = {'none': 'no\nintervention', 'fedar': 'FedAR\nresampling',
               'demo_bal': 'demographic\nbalancing'}
 
 plt.rcParams.update({
-    'font.size': 12, 'axes.labelsize': 13, 'axes.titlesize': 13.5,
-    'xtick.labelsize': 11, 'ytick.labelsize': 11, 'legend.fontsize': 10.5,
-    'figure.dpi': 150, 'savefig.dpi': 300, 'savefig.bbox': 'tight',
+    'font.size': 20, 'axes.labelsize': 16, 'axes.titlesize': 16,
+    'xtick.labelsize': 18, 'ytick.labelsize': 18, 'legend.fontsize': 16,
+    'figure.dpi': 600, 'savefig.dpi': 600, 'savefig.bbox': 'tight',
     'axes.spines.top': False, 'axes.spines.right': False,
 })
 
@@ -180,6 +184,86 @@ def fig_multiseed(ms, out_path):
 
         largest = max(abs(deltas[c]['gap']['mean']) for c in conds)
         pct = 100 * largest / base.mean()
+        ax.set_title(f"gap itself {base.mean():.3f} ± "
+                     f"{base.std(ddof=1):.3f}   ·   largest effect = "
+                     f"{pct:.1f}% of it", pad=8, fontsize=11)
+        ax.grid(axis='y', alpha=0.25, linewidth=0.6)
+        ax.set_axisbelow(True)
+
+        # dataset name below the panel, clear of the two-line x-tick labels
+        ax.text(0.5, -0.20, DS_LABEL[ds], transform=ax.transAxes,
+                ha='center', va='top', fontsize=13, fontweight='bold')
+
+    axes[0].text(-0.42, -lim * 0.93, 'each point is one seed',
+                 fontsize=9.5, color='#555555')
+
+    fig.suptitle('Neither intervention moves the subgroup gap by more than 8% '
+                 'of its own magnitude',
+                 y=1.06, fontsize=14, fontweight='bold')
+    fig.text(0.5, 1.005,
+             'five seeds · paired within-seed differences against no intervention',
+             ha='center', va='bottom', fontsize=10.5, color='#555555')
+    fig.subplots_adjust(bottom=0.20)
+    fig.savefig(out_path)
+    plt.close(fig)
+    print(f"  wrote {out_path}")
+
+''' def fig_multiseed(ms, out_path):
+    """
+    Per-seed paired differences, with the gap's own magnitude for scale.
+
+    Individual seeds are plotted, not just mean and error bar, because sign
+    consistency across seeds is the claim — not the p-value, which is fragile
+    at n=5.
+    """
+    datasets = [d for d in ('utkface', 'rafdb') if d in ms]
+    fig, axes = plt.subplots(1, len(datasets),
+                             figsize=(7.0 * len(datasets), 5.6), sharey=True)
+    axes = np.atleast_1d(axes)
+
+    # common y-range so the two panels are visually comparable
+    allv = [v for d in datasets for c in ('fedar', 'demo_bal')
+            for v in ms[d]['deltas'][c]['gap']['values']]
+    lim = max(abs(min(allv)), abs(max(allv))) * 1.45
+
+    for ax, ds in zip(axes, datasets):
+        deltas = ms[ds]['deltas']
+        seeds = ms[ds]['seeds']
+        base = np.array([ms[ds]['per_seed'][str(s)]['none']['gap']
+                         for s in seeds])
+
+        conds = ['fedar', 'demo_bal']
+        colours = [CB['orange'], CB['green']]
+
+        for i, (c, col) in enumerate(zip(conds, colours)):
+            g = deltas[c]['gap']
+            vals = g['values']
+            jitter = np.linspace(-0.13, 0.13, len(vals))
+            ax.scatter(np.full(len(vals), i) + jitter, vals, s=46,
+                       color=col, alpha=0.75, zorder=3,
+                       edgecolors='white', linewidths=0.8)
+            # mean and standard deviation
+            ax.hlines(g['mean'], i - 0.28, i + 0.28, colors=col,
+                      linewidth=3, zorder=4)
+            ax.add_patch(plt.Rectangle((i - 0.28, g['mean'] - g['std']),
+                                       0.56, 2 * g['std'],
+                                       color=col, alpha=0.16, zorder=1))
+            sign = f"{g['n_positive']}+ / {g['n_negative']}−"
+            ax.text(i, lim * 0.90, f"{g['mean']:+.4f}\n± {g['std']:.4f}\n{sign}",
+                    ha='center', va='top', fontsize=9.5, color=col)
+
+        # the band the gap itself occupies, for scale
+        ax.axhspan(-base.mean(), base.mean(), color=CB['grey'], alpha=0.07,
+                   zorder=0)
+        ax.axhline(0, color='#333333', linewidth=1.3, zorder=2)
+
+        ax.set_xticks(range(len(conds)))
+        ax.set_xticklabels([COND_SHORT[c] for c in conds])
+        ax.set_ylabel('change in subgroup gap' if ax is axes[0] else '')
+        ax.set_ylim(-lim, lim)
+
+        largest = max(abs(deltas[c]['gap']['mean']) for c in conds)
+        pct = 100 * largest / base.mean()
         ax.set_title(f"{DS_LABEL[ds]}\ngap itself {base.mean():.3f} ± "
                      f"{base.std(ddof=1):.3f}   ·   largest effect = "
                      f"{pct:.1f}% of it", pad=10)
@@ -195,7 +279,7 @@ def fig_multiseed(ms, out_path):
                  y=1.03, fontsize=14)
     fig.savefig(out_path)
     plt.close(fig)
-    print(f"  wrote {out_path}")
+    print(f"  wrote {out_path}") '''
 
 
 # --------------------------------------------------------------------------
@@ -244,4 +328,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main() 

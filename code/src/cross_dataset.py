@@ -27,6 +27,10 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from fedar_common.plotting import apply_poster_style
+apply_poster_style()
+
+from fedar_common.plotting import CB, POSTER, load_json
 
 
 DS = {
@@ -47,9 +51,9 @@ COND_LABEL = {'none': 'No intervention',
 LAMS = [1, 5, 20, 50]
 
 plt.rcParams.update({
-    'font.size': 12, 'axes.labelsize': 13, 'axes.titlesize': 13.5,
-    'xtick.labelsize': 11, 'ytick.labelsize': 11, 'legend.fontsize': 11,
-    'figure.dpi': 150, 'savefig.dpi': 300, 'savefig.bbox': 'tight',
+    'font.size': 20, 'axes.labelsize': 16, 'axes.titlesize': 16,
+    'xtick.labelsize': 18, 'ytick.labelsize': 18, 'legend.fontsize': 16,
+    'figure.dpi': 600, 'savefig.dpi': 600, 'savefig.bbox': 'tight',
     'axes.spines.top': False, 'axes.spines.right': False,
 })
 
@@ -149,7 +153,7 @@ def fig_task_vs_demo(probes_rafdb, out_path):
     """
     targets = ['emotion'] + DEMO
     labels = ['Emotion\n(the task)', 'Gender', 'Race', 'Age']
-    colours = [CB['purple'], CB['blue'], CB['orange'], CB['green']]
+    colours = POSTER   # steel task bar + graded amber demographics
 
     aurocs, accs, chances = [], [], []
     for t in targets:
