@@ -1,5 +1,5 @@
 """
-Shared plotting constants and tiny helpers.
+Shared plotting constants and smol helpers    
 
 The Okabe-Ito colourblind-safe palette was redefined in eight files
 (control_figures, cross_dataset, figX5_multiseed, make_lda_panels,

@@ -1,5 +1,5 @@
 """
-Figures for the two control experiments.
+Figures for the two control experiment.
 
 figX6_pca_control  - is the encoder responsible for the leakage? (no)
 figX7_multiseed    - do the interventions move the gap? (not meaningfully)
