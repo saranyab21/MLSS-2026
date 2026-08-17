@@ -14,6 +14,10 @@ Friedrich-Alexander-Universität Erlangen-Nürnberg
 
 ---
 
+<p align="center">
+  <img src="figures/hero_pipeline.png" alt="MLSS 2026 experimental pipeline" width="100%">
+</p>
+
 ## The claim
 
 [FedAR](https://ieeexplore.ieee.org/document/10797675) (Chatterjee, Ghosh,
