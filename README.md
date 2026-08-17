@@ -8,6 +8,10 @@ Institute for Intelligent Systems, Tübingen, 31 August – 11 September 2026.
 Saranya Bhattacharjee · MSc Artificial Intelligence · Pattern Recognition Lab (LME),
 Friedrich-Alexander-Universität Erlangen-Nürnberg
 
+<p align="center">
+  <img src="figures/hero_pipeline.png" alt="MLSS 2026 project pipeline" width="100%">
+</p>
+
 ---
 
 ## The claim
