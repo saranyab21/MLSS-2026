@@ -3,7 +3,7 @@
 **Revisiting FedAR through a demographic lens.**
 
 Poster project for [MLSS 2026](https://mlss2026.is.tuebingen.mpg.de/), Max Planck
-Institute for Intelligent Systems, Tübingen, 31 August – 11 September 2026.
+Institute for Intelligent Systems, Tübingen.
 
 Saranya Bhattacharjee · MSc Artificial Intelligence · Pattern Recognition Lab (LME),
 Friedrich-Alexander-Universität Erlangen-Nürnberg
